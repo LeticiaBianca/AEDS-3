@@ -18,7 +18,7 @@ public class Main {
             reader = new BufferedReader(new FileReader(file));
             while((line[i] = reader.readLine()) != null) {
                 Airbnb acomodations = new Airbnb();
-                acomodations.read(file);
+                acomodations.read(line[i]);
                 //passar para arquivo: função na classe Airbnb
                 i++;
             }

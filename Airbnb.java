@@ -139,6 +139,8 @@ public class Airbnb {
         String[] split = line.split(";");
 
         // read id
+        System.out.println(split[i]);
+        split[i] = split[i].replaceAll("\\uFEFF", "");
         id = Integer.parseInt(split[i]);
         i++;
         
@@ -173,25 +175,54 @@ public class Airbnb {
         i++;
 
         //Define the data format and read review
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-        try {
-            review = format.parse(split[i]);
-        } catch (ParseException e) {
-            e.printStackTrace();        
+        if(split[i].length() != 0){
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+            try {
+                review = format.parse(split[i]);
+            } catch (ParseException e) {
+                e.printStackTrace();        
+            }
+        }else{
+            review = null;
         }
+        
         i++;
 
         //read name
-        name = split[i];
+        if(split[i].charAt(0) == '\"'){
+            if(split[i].substring(1).contains("\"")){
+                neigh = split[i];
+            }else{
+                name = split[i];
+                i++;
+                while(split[i].contains("\"") == false){
+                    name += split[i];
+                    i++;
+                }
+                name += split[i];
+                
+                name.replaceAll("\"", "");
+            }            
+        }else{
+            name = split[i];
+        }
         i++;
 
         //read neighbourhood
-        neigh = split[i];
+        if(split.length == i){
+            neigh = null;
+        }else{
+            neigh = split[i];
+        }
         i++;
 
         //read rating
-        rating = Integer.parseInt(split[i]);
-
+        if(split.length <= i){
+            rating = -1;
+        }else{
+            rating = Integer.parseInt(split[i]);
+        }
+        
     }
         
     public byte[] toByteArray() throws IOException{
