@@ -143,7 +143,6 @@ public class Airbnb {
         // read id
         split[i] = split[i].replaceAll("\\uFEFF", "");
         id = Integer.parseInt(split[i]);
-        System.out.println(id);
         i++;
         
         //read type
@@ -193,7 +192,7 @@ public class Airbnb {
         //read name
         if(split[i].charAt(0) == '\"'){
             if(split[i].substring(1).contains("\"")){
-                neigh = split[i];
+                name = split[i];
             }else{
                 name = split[i];
                 i++;
@@ -208,12 +207,11 @@ public class Airbnb {
         }else{
             name = split[i];
         }
-        System.out.println(name);
         i++;
         
         //read neighbourhood
         if(split.length == i){
-            neigh = null;
+            neigh = "Downtown";
         }else{
             neigh = split[i];
         }
@@ -225,7 +223,6 @@ public class Airbnb {
         }else{
             rating = Integer.parseInt(split[i]);
         }
-        
     }
         
     public byte[] toByteArray() throws IOException{
