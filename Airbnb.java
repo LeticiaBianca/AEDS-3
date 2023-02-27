@@ -135,7 +135,7 @@ public class Airbnb {
         this.rating = rating;
     }
 
-    public void read(String line){
+    public void read(String line) throws ParseException{
        
         int i = 0;
         String[] split = line.split(";");
@@ -176,15 +176,15 @@ public class Airbnb {
         i++;
 
         //Define the data format and read review
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
         if(split[i].length() != 0){
-            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
             try {
                 review = format.parse(split[i]);
             } catch (ParseException e) {
                 e.printStackTrace();        
             }
         }else{
-            review = null;
+            review = format.parse("30/08/2022");
         }
         
         i++;
@@ -231,17 +231,21 @@ public class Airbnb {
 
             out.writeInt(id);
             out.writeUTF(type);
-            // vetor
+            out.writeInt(amenities.size());
+            for (String amenitie : amenities) {
+                out.writeUTF(amenitie);
+            }
             out.writeInt(accommodates);
             out.writeUTF(cancelation);
             out.writeUTF(cleaning);
             out.writeUTF(city);
-            // out.writeLong(review);
+            out.writeLong(review.getTime());
             out.writeUTF(name);
             out.writeUTF(neigh);
             out.writeInt(rating);
 
             return bytes.toByteArray();
     }
+    
     
 }
