@@ -1,3 +1,5 @@
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -139,9 +141,9 @@ public class Airbnb {
         String[] split = line.split(";");
 
         // read id
-        System.out.println(split[i]);
         split[i] = split[i].replaceAll("\\uFEFF", "");
         id = Integer.parseInt(split[i]);
+        System.out.println(id);
         i++;
         
         //read type
@@ -206,8 +208,9 @@ public class Airbnb {
         }else{
             name = split[i];
         }
+        System.out.println(name);
         i++;
-
+        
         //read neighbourhood
         if(split.length == i){
             neigh = null;
@@ -226,8 +229,22 @@ public class Airbnb {
     }
         
     public byte[] toByteArray() throws IOException{
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            DataOutputStream out = new DataOutputStream(bytes);
 
-        return null;
+            out.writeInt(id);
+            out.writeUTF(type);
+            // vetor
+            out.writeInt(accommodates);
+            out.writeUTF(cancelation);
+            out.writeUTF(cleaning);
+            out.writeUTF(city);
+            // out.writeLong(review);
+            out.writeUTF(name);
+            out.writeUTF(neigh);
+            out.writeInt(rating);
+
+            return bytes.toByteArray();
     }
     
 }
