@@ -23,6 +23,7 @@ public class Airbnb {
     protected String name;
     protected String neigh;
     protected int rating;
+    public boolean isValid;
     
     public Airbnb(int id, String type, ArrayList<String> amenities, int accommodates, String cancelation,
             String cleaning, String city, Date review, String name, String neigh, int rating) {
@@ -37,6 +38,7 @@ public class Airbnb {
         this.name = name;
         this.neigh = neigh;
         this.rating = rating;
+        this.isValid = true;
     }
 
     public Airbnb() {
@@ -45,6 +47,7 @@ public class Airbnb {
         this.id = this.rating = this.accommodates = -1;
         this.amenities = new ArrayList<>();
         this.review = null;
+        this.isValid = true;
     }
 
     public int getId() {
@@ -226,25 +229,33 @@ public class Airbnb {
     }
         
     public byte[] toByteArray() throws IOException{
+        
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             DataOutputStream out = new DataOutputStream(bytes);
 
+            out.writeBoolean(isValid);
+
             out.writeInt(id);
-            out.writeUTF(type);
+            toByteString(type, out);
             out.writeInt(amenities.size());
             for (String amenitie : amenities) {
-                out.writeUTF(amenitie);
+                toByteString(amenitie, out);
             }
             out.writeInt(accommodates);
-            out.writeUTF(cancelation);
-            out.writeUTF(cleaning);
-            out.writeUTF(city);
+            toByteString(cancelation, out);
+            toByteString(cleaning, out);
+            toByteString(city, out);
             out.writeLong(review.getTime());
-            out.writeUTF(name);
-            out.writeUTF(neigh);
+            toByteString(name, out);
+            toByteString(neigh, out);
             out.writeInt(rating);
 
             return bytes.toByteArray();
+    }
+
+    public void toByteString(String data, DataOutputStream out) throws IOException{
+        out.writeInt(data.length());
+        out.writeUTF(data);
     }
     
     

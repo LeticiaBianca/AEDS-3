@@ -1,10 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.text.ParseException;
 
@@ -18,7 +15,7 @@ public class Main {
         String file = "Airbnb.csv";
         BufferedReader reader = null;
         String line[] = new String[80000];
-        int i = 0;
+        int i = 0, lastId=0;
         String filename = "out.bin";
         byte[] bytesdata;
 
@@ -34,6 +31,7 @@ public class Main {
                 filebytes.write(bytesdata);
                 //passar para arquivo: função na classe Airbnb
                 i++;
+                lastId = acomodations.id;
             }
         }catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
