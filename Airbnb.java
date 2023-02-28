@@ -1,3 +1,5 @@
+// ===================== IMPORTING LIBRARIES ===========================
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -12,21 +14,24 @@ import java.util.Locale;
  */
 public class Airbnb {
 
+    
+    // declaration of variables
     protected int id;
     protected String type;
     protected ArrayList<String> amenities;
     protected int accommodates;
     protected String cancelation;
-    protected String cleaning; //tem que ter uma string de tamanho fixo
+    protected String cleaning;
     protected String city;
     protected Date review;
     protected String name;
-    protected String neigh;
+    protected String neighbourhood;
     protected int rating;
     public boolean isValid;
-    
+
+    //constructor
     public Airbnb(int id, String type, ArrayList<String> amenities, int accommodates, String cancelation,
-            String cleaning, String city, Date review, String name, String neigh, int rating) {
+            String cleaning, String city, Date review, String name, String neighbourhood, int rating) {
         this.id = id;
         this.type = type;
         this.amenities = amenities;
@@ -36,20 +41,22 @@ public class Airbnb {
         this.city = city;
         this.review = review;
         this.name = name;
-        this.neigh = neigh;
+        this.neighbourhood = neighbourhood;
         this.rating = rating;
         this.isValid = true;
     }
 
+    //empty contructor
     public Airbnb() {
 
-        this.type = this.cancelation = this.city = this.name = this.neigh  = this.cleaning = null;
+        this.type = this.cancelation = this.city = this.name = this.neighbourhood  = this.cleaning = null;
         this.id = this.rating = this.accommodates = -1;
         this.amenities = new ArrayList<>();
         this.review = null;
         this.isValid = true;
     }
 
+    // =========================== GET AND SET======================
     public int getId() {
         return id;
     }
@@ -122,12 +129,12 @@ public class Airbnb {
         this.name = name;
     }
 
-    public String getNeigh() {
-        return neigh;
+    public String getneighbourhood() {
+        return neighbourhood;
     }
 
-    public void setNeigh(String neigh) {
-        this.neigh = neigh;
+    public void setneighbourhood(String neighbourhood) {
+        this.neighbourhood = neighbourhood;
     }
 
     public int getRating() {
@@ -138,23 +145,25 @@ public class Airbnb {
         this.rating = rating;
     }
 
-// ================================== READ METHOD =================================================
+    // ================================== READ METHOD =================================================
+    // This method splits the csv line into ";" filling up all variables
 
     public void read(String line) throws ParseException{
        
         int i = 0;
         String[] split = line.split(";");
 
-        // read id
+        // The "replaceAll" method is treating an ERROR with 'ghost' character in the beginning of the file.
         split[i] = split[i].replaceAll("\\uFEFF", "");
         id = Integer.parseInt(split[i]);
         i++;
         
-        //read type
         type = split[i];
         i++;
 
-        //read amenties (String array)
+
+        // The following lines are treating the sequence of amenities into a list 
+        //It split the data into ",", verify if has at least one amenity and replace all the undesirable characters
         int j = 0;
         String[] splitAme = split[i].split(",");
         amenities.add(splitAme[j].substring(2));
@@ -170,23 +179,19 @@ public class Airbnb {
         }
         i++;
 
-        //read accommodates
         accommodates = Integer.parseInt(split[i]);
         i++;
 
-        //read cancelation (String size non variable)
         cancelation = split[i];
         i++;
 
-        //read cleaning
         cleaning = split[i];
         i++;
 
-        //read city
         city = split[i];
         i++;
 
-        //Define the data format and read review
+        //If the date is empty replace it with a ramdom date
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
         if(split[i].length() != 0){
             try {
@@ -197,10 +202,8 @@ public class Airbnb {
         }else{
             review = format.parse("30/08/2022");
         }
-        
         i++;
 
-        //read name
         if(split[i].charAt(0) == '\"'){
             if(split[i].substring(1).contains("\"")){
                 name = split[i];
@@ -219,16 +222,14 @@ public class Airbnb {
             name = split[i];
         }
         i++;
-        
-        //read neighbourhood
+
         if(split.length == i){
-            neigh = "Downtown";
+            neighbourhood = "Downtown";
         }else{
-            neigh = split[i];
+            neighbourhood = split[i];
         }
         i++;
 
-        //read rating
         if(split.length <= i){
             rating = -1;
         }else{
@@ -255,7 +256,7 @@ public class Airbnb {
             toByteString(city, out);
             out.writeLong(review.getTime());
             toByteString(name, out);
-            toByteString(neigh, out);
+            toByteString(neighbourhood, out);
             out.writeInt(rating);
 
             return bytes.toByteArray();
