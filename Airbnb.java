@@ -138,6 +138,8 @@ public class Airbnb {
         this.rating = rating;
     }
 
+// ================================== READ METHOD =================================================
+
     public void read(String line) throws ParseException{
        
         int i = 0;
@@ -152,13 +154,19 @@ public class Airbnb {
         type = split[i];
         i++;
 
-        //ler vetor, deu preguiça de fazer agr
+        //read amenties (String array)
         int j = 0;
         String[] splitAme = split[i].split(",");
-        while(splitAme[j].contains("}") == false){
-            amenities.add(splitAme[j]);
-            amenities.set(j, amenities.get(j).replaceAll("\"", ""));
-            j++;
+        amenities.add(splitAme[j].substring(2));
+        amenities.set(j, amenities.get(j).replaceAll("\"", ""));
+        j++;
+
+        if(splitAme.length > j){
+            while(splitAme[j].contains("}") == false){
+                amenities.add(splitAme[j]);
+                amenities.set(j, amenities.get(j).replaceAll("\"", ""));
+                j++;
+            }
         }
         i++;
 
@@ -166,7 +174,7 @@ public class Airbnb {
         accommodates = Integer.parseInt(split[i]);
         i++;
 
-        //read cancelation
+        //read cancelation (String size non variable)
         cancelation = split[i];
         i++;
 
