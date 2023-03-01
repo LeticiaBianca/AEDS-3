@@ -58,16 +58,20 @@ public class Crud {
         
     }
 
+    // search id
     public Airbnb searchId(int id) throws Exception{
         Airbnb maybe = new Airbnb();
         for(int i = 0; i < fileLength; i++){
             if(hostel.get(i).id == id){
                 maybe = hostel.get(i);
+                i = fileLength;
             }
-            else {
-                System.out.println("UNKONW ID!");
+            else{
                 maybe = null;
             }            
+        }
+        if(maybe == null){
+            System.out.println("ID NOT FOUND!");
         }
         return maybe;
     }

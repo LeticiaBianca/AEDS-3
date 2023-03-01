@@ -3,11 +3,14 @@
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.Calendar;
 
 /**
  * Airnbnb
@@ -50,7 +53,8 @@ public class Airbnb {
     public Airbnb() {
 
         this.type = this.cancelation = this.city = this.name = this.neighbourhood  = this.cleaning = null;
-        this.id = this.rating = this.accommodates = -1;
+        this.id = this.accommodates = -1;
+        this.rating = 0;
         this.amenities = new ArrayList<>();
         this.review = null;
         this.isValid = true;
@@ -144,10 +148,11 @@ public class Airbnb {
     public void setRating(int rating) {
         this.rating = rating;
     }
-
+    
+    
     // ================================== READ METHOD =================================================
     // This method splits the csv line into ";" filling up all variables
-
+    
     public void read(String line) throws ParseException{
        
         int i = 0;
@@ -160,8 +165,8 @@ public class Airbnb {
         
         type = split[i];
         i++;
-
-
+        
+        
         // The following lines are treating the sequence of amenities into a list 
         //It split the data into ",", verify if has at least one amenity and replace all the undesirable characters
         int j = 0;
@@ -169,7 +174,7 @@ public class Airbnb {
         amenities.add(splitAme[j].substring(2));
         amenities.set(j, amenities.get(j).replaceAll("\"", ""));
         j++;
-
+        
         if(splitAme.length > j){
             while(splitAme[j].contains("}") == false){
                 amenities.add(splitAme[j]);
@@ -190,7 +195,7 @@ public class Airbnb {
 
         city = split[i];
         i++;
-
+        
         //If the date is empty replace it with a ramdom date
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
         if(split[i].length() != 0){
@@ -203,7 +208,7 @@ public class Airbnb {
             review = format.parse("30/08/2022");
         }
         i++;
-
+        
         if(split[i].charAt(0) == '\"'){
             if(split[i].substring(1).contains("\"")){
                 name = split[i];
@@ -222,21 +227,43 @@ public class Airbnb {
             name = split[i];
         }
         i++;
-
+        
         if(split.length == i){
             neighbourhood = "Downtown";
         }else{
             neighbourhood = split[i];
         }
         i++;
-
+        
         if(split.length <= i){
             rating = -1;
         }else{
             rating = Integer.parseInt(split[i]);
         }
     }
-        
+    
+    //================================== PRINT METHOD ==================================
+
+    public void print(){
+        System.out.print(id + " ");
+        System.out.print(type + " ");
+        System.out.print(amenities + " ");
+        System.out.print(accommodates + " ");
+        System.out.print(cancelation + " ");
+        System.out.print(cleaning + " ");
+        System.out.print(city + " ");
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);	
+        Calendar reviewcal = Calendar.getInstance();
+        reviewcal.setTime(review);
+	   
+        System.out.print(sdf.format(reviewcal.getTime()) + " ");
+
+        System.out.print(name + " ");
+        System.out.print(neighbourhood + " ");
+        System.out.print(rating + " ");
+    }
+    
     public byte[] toByteArray() throws IOException{
         
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -254,7 +281,12 @@ public class Airbnb {
             toByteString(cancelation, out);
             toByteString(cleaning, out);
             toByteString(city, out);
-            out.writeLong(review.getTime());
+
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);	
+            Calendar reviewcal = Calendar.getInstance();
+            reviewcal.setTime(review);
+
+            out.writeString(sdf.format(reviewcal.getTime()));
             toByteString(name, out);
             toByteString(neighbourhood, out);
             out.writeInt(rating);
