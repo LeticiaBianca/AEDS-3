@@ -3,12 +3,10 @@
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.Calendar;
 
@@ -282,11 +280,8 @@ public class Airbnb {
             toByteString(cleaning, out);
             toByteString(city, out);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);	
-            Calendar reviewcal = Calendar.getInstance();
-            reviewcal.setTime(review);
+            out.writeLong(review.getTime());
 
-            out.writeString(sdf.format(reviewcal.getTime()));
             toByteString(name, out);
             toByteString(neighbourhood, out);
             out.writeInt(rating);

@@ -6,7 +6,9 @@ public class Main {
         Airbnb all = new Airbnb();
         Crud crud = new Crud();
         crud.loadFile();
-        all = crud.searchId(65);
-        all.print();
+        crud.searchId(1);
+        all = crud.delete(1);
+        System.out.println(all.isValid);
+        // all.print();
     }
 }
