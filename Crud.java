@@ -27,8 +27,10 @@ public class Crud {
         byte[] bytesdata;
         String file = "Airbnb.csv";
         String readline;
+        
 
         RandomAccessFile filebytes = new RandomAccessFile(filename, "rw");
+        
 
         try{
             reader = new BufferedReader(new FileReader(file));
@@ -53,6 +55,7 @@ public class Crud {
                 }
             }
         }
+        filebytes.seek();
         filebytes.close();
     }
 
@@ -83,6 +86,7 @@ public class Crud {
 
     public Airbnb delete(int id)throws Exception{
         Airbnb aux = new Airbnb();
+
         for(int i = 0; i < fileLength; i++){
             if(hostel.get(i).id == id){
                 aux = hostel.get(i);
