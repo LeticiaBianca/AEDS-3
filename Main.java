@@ -10,7 +10,7 @@ public class Main {
         crud.delete(1);
         System.out.println();
         all.print();
-        System.out.println("to aqui");
+        System.out.println("tooi awjollr");
 
        // crud.create();
 
