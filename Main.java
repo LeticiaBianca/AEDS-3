@@ -8,9 +8,10 @@ public class Main {
         crud.loadFile();
         all = crud.searchId(1);
         crud.delete(1);
-        // all.print();
+        System.out.println();
+        all.print();
 
-        crud.create();
+       // crud.create();
 
     }
 }

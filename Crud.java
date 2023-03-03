@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -13,16 +14,16 @@ public class Crud {
     public int lastId;
     public int fileLength;
     public ArrayList<Airbnb> hostel;
+    String filename;
 
     public Crud() {
         this.lastId = 0;
         this.fileLength = 0;
         this.hostel = new ArrayList<>();
+        this.filename = "out.bin";
     }
 
     public void loadFile() throws ParseException, IOException{
-        ArrayList<String> line = new ArrayList<>();
-        String filename = "out.bin";
         BufferedReader reader = null;
         byte[] bytesdata;
         String file = "Airbnb.csv";
@@ -35,9 +36,8 @@ public class Crud {
         try{
             reader = new BufferedReader(new FileReader(file));
             while((readline = reader.readLine()) != null) {
-                line.add(readline);
                 hostel.add(fileLength, new Airbnb());
-                hostel.get(fileLength).read(line.get(fileLength));
+                hostel.get(fileLength).read(readline);
                 bytesdata = hostel.get(fileLength).toByteArray();
                 filebytes.writeInt(bytesdata.length);
                 filebytes.write(bytesdata);
@@ -55,7 +55,6 @@ public class Crud {
                 }
             }
         }
-        filebytes.seek();
         filebytes.close();
     }
 
@@ -84,26 +83,56 @@ public class Crud {
         return aux;
     }
 
-    public Airbnb delete(int id)throws Exception{
-        Airbnb aux = new Airbnb();
+    public boolean delete(int id) throws IOException{
+        RandomAccessFile filebytes = new RandomAccessFile(filename, "rw");
+        int pos = 0;
+        filebytes.seek(pos);
 
-        for(int i = 0; i < fileLength; i++){
+        int size;
+
+        while((size = filebytes.readInt()) != -1){
+            pos += 4; 
+            if(filebytes.readBoolean() == true){
+                if(filebytes.readInt() == id){
+                    filebytes.seek(pos);
+                    filebytes.writeBoolean(false);
+                    rec(0, id);
+                    return true;
+                }else{
+                    pos += size;
+                }
+            }else{
+                pos += size;
+            }
+            filebytes.seek(pos);
+        }
+
+        filebytes.close();
+        return false;
+    }
+
+    public void rec(int i, int id){
+        if(i<fileLength){
             if(hostel.get(i).id == id){
+                Airbnb aux = new Airbnb();
                 aux = hostel.get(i);
                 aux.isValid = false;
                 hostel.set(i, aux);
                 i = fileLength;
             }
+            rec(i++, id);
         }
-        return aux;
     }
 
-    public Airbnb create() throws ParseException{
+    public Airbnb create() throws ParseException, IOException{
         int rating, accommodates, id;
         String type, name, cancelation, city, cleaning, neighbourhood;
         ArrayList<String> amenities = new ArrayList<String>();
         Date review;
         String amenitiesAUX, reviewAux;
+
+        byte[] bytesdata;
+        RandomAccessFile filebytes = new RandomAccessFile(filename, "rw");
 
         id = lastId += 1;
 
@@ -167,7 +196,19 @@ public class Crud {
         System.out.println();
 
         Airbnb newHostel = new Airbnb(id, type, amenities, accommodates, cancelation, cleaning, city, review, name, neighbourhood, rating);
-        hostel.add();
+        // hostel.add();
+
+        int pos = 0;
+        filebytes.seek(pos);
+        while(filebytes.readByte()!= -1){
+           pos++;
+        }
+
+        bytesdata =newHostel.toByteArray();
+        filebytes.writeInt(bytesdata.length);
+        filebytes.write(bytesdata);
+        lastId =newHostel.id;
+        fileLength++;
         
         return null;
     }
