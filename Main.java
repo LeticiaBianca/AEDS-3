@@ -1,4 +1,6 @@
 //by Letícia Bianca Oliveveira and Vitor Lages de Albuquerque 
+
+// ===================== IMPORTING LIBRARIES ===========================
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
@@ -12,15 +14,17 @@ public class Main {
         Airbnb all = new Airbnb();
         Crud crud = new Crud();
         crud.loadFile();
-        // all = crud.searchId(1);
-        // crud.delete(1);
-        // System.out.println();
-        // all.print();
+        all = crud.searchId(1);
+        all.print();
+        crud.delete(1);
         crud.update(2);
-        // crud.create();
+        crud.create();
 
         
     }
+
+    //============================ CREATE AN OBJECT METHOD ================
+    //this method interact with the user to fill a Airbnb object and is used in create and update method 
     public static Airbnb scan(int id) throws ParseException{
         int rating, accommodates;
         String type, name, cancelation, city, cleaning, neighbourhood;
@@ -30,8 +34,7 @@ public class Main {
         
         Scanner scan = new Scanner(System.in);
         
-        System.out.println("ADDING NEW HOSTEL");
-        System.out.println("");
+        System.out.println();
         System.out.println();
 
         System.out.println("Property name: ");
@@ -63,8 +66,8 @@ public class Main {
         scan.nextLine();
         System.out.println();
         
+        //adjusting the date format
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-        
         System.out.println("Last review date (DD/MM/YYYY): ");
         reviewAux =  scan.nextLine();
         review = format.parse(reviewAux);
@@ -82,6 +85,7 @@ public class Main {
         System.out.println("AMENITIES");
         System.out.println("Type all the amenitties your property has, type 0 to stop");
 
+        //filling a list of amenitties
         while((amenitiesAUX = scan.nextLine()).equals("0") == false){
             amenities.add(amenitiesAUX);
         }

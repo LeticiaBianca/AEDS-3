@@ -207,6 +207,7 @@ public class Airbnb {
         }
         i++;
         
+        //making corrections if the name has characters like " ; " and " " "
         if(split[i].charAt(0) == '\"'){
             if(split[i].substring(1).contains("\"")){
                 name = split[i];
@@ -226,6 +227,7 @@ public class Airbnb {
         }
         i++;
         
+        //filling the empty neighborhoods
         if(split.length == i){
             neighbourhood = "Downtown";
         }else{
@@ -233,6 +235,7 @@ public class Airbnb {
         }
         i++;
         
+        //check if it exists before parsing
         if(split.length <= i){
             rating = -1;
         }else{
@@ -251,10 +254,10 @@ public class Airbnb {
         System.out.print(cleaning + " ");
         System.out.print(city + " ");
 
+        //adjusting the date format
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);	
         Calendar reviewcal = Calendar.getInstance();
         reviewcal.setTime(review);
-	   
         System.out.print(sdf.format(reviewcal.getTime()) + " ");
 
         System.out.print(name + " ");
@@ -262,6 +265,7 @@ public class Airbnb {
         System.out.print(rating + " ");
     }
     
+    //================================== CONVERT TO BYTES METHOD ==================================
     public byte[] toByteArray() throws IOException{
         
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -272,14 +276,17 @@ public class Airbnb {
             out.writeInt(id);
             toByteString(type, out);
             out.writeInt(amenities.size());
+
             for (String amenitie : amenities) {
                 toByteString(amenitie, out);
             }
+
             out.writeInt(accommodates);
             toByteString(cancelation, out);
             toByteString(cleaning, out);
             toByteString(city, out);
 
+            //write the time in milliseconds pas until this date in the binary file
             out.writeLong(review.getTime());
 
             toByteString(name, out);
@@ -289,6 +296,8 @@ public class Airbnb {
             return bytes.toByteArray();
     }
 
+    //================================== CONVERT STRING TO BYTES METHOD ==================================
+    //This method write the size followed for the string in binary
     public void toByteString(String data, DataOutputStream out) throws IOException{
         out.writeInt(data.length());
         out.writeUTF(data);
