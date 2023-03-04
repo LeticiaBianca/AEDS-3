@@ -16,14 +16,14 @@ public class Main {
         crud.loadFile();
         all = crud.searchId(1);
         all.print();
-        crud.delete(1);
-        crud.update(2);
+        crud.delete(2);
+        crud.update(3);
         crud.create();
 
         
     }
 
-    //============================ CREATE AN OBJECT METHOD ================
+    //============================ CREATE AN OBJECT METHOD ============================
     //this method interact with the user to fill a Airbnb object and is used in create and update method 
     public static Airbnb scan(int id) throws ParseException{
         int rating, accommodates;
