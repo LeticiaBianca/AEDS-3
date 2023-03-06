@@ -11,28 +11,31 @@ import java.util.Locale;
 public class Main {
 
     public static void main(String[] args) throws Exception{
-        int answer = -1;
+        int answer;
         Crud crud = new Crud();
-        Scanner scan = new Scanner(System.in);
+       
         boolean isLoaded = false;
 
         do {
+            Scanner scan = new Scanner(System.in);
             System.out.println("1 - to Load the file");
             System.out.println("2 - to Create a record on the file");
             System.out.println("3 - to Read a record");
             System.out.println("4 - to Update a record on the file");
             System.out.println("5 - Delete a record");
+            System.out.println("6 - sorting algorithms");
             System.out.println("0 - to exit the program");
             System.out.println();
             System.out.print("Choose an operation: ");
-            while(scan.hasNextLine()){
-                answer = scan.nextInt();
-
-            }
+            
+            answer = scan.nextInt();
             System.out.println();
             
 
             switch (answer){
+
+                case 0:
+                    break;
                 
                 case 1:
                     crud.loadFile();
@@ -105,7 +108,30 @@ public class Main {
                         System.out.println();
                     }
                     break;
-        }
+                case 6:
+                    System.out.println();
+                    System.out.println("1 - to Sort with Extern Merge Sort");
+                    System.out.println("2 - to Sort with Variable Blocks Merge Sort");
+                    System.out.println("3 - to Sort with Selection by Substitution");
+                    
+                    System.out.println();
+                    System.out.print("Choose an operation: ");
+                    int option = scan.nextInt();
+
+                    switch(option){
+                        case 1:
+                        break;
+                        case 2:
+                        break;
+                        case 3:
+                        break;
+                    }
+                    break;
+                default:
+                    System.out.println();
+                    System.out.println("Invalid operation");  
+                    System.out.println();  
+            }
         }
         while(answer != 0);
     }
