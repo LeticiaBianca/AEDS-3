@@ -11,16 +11,103 @@ import java.util.Locale;
 public class Main {
 
     public static void main(String[] args) throws Exception{
-        Airbnb all = new Airbnb();
+        int answer = -1;
         Crud crud = new Crud();
-        crud.loadFile();
-        all = crud.searchId(1);
-        all.print();
-        crud.delete(2);
-        crud.update(3);
-        crud.create();
+        Scanner scan = new Scanner(System.in);
+        boolean isLoaded = false;
 
-        
+        do {
+            System.out.println("1 - to Load the file");
+            System.out.println("2 - to Create a record on the file");
+            System.out.println("3 - to Read a record");
+            System.out.println("4 - to Update a record on the file");
+            System.out.println("5 - Delete a record");
+            System.out.println("0 - to exit the program");
+            System.out.println();
+            System.out.print("Choose an operation: ");
+            while(scan.hasNextLine()){
+                answer = scan.nextInt();
+
+            }
+            System.out.println();
+            
+
+            switch (answer){
+                
+                case 1:
+                    crud.loadFile();
+                    isLoaded = true;
+                    System.out.println();
+                    System.out.println("Successfully loaded!");
+                    System.out.println();
+                    break;
+
+                case 2:
+                    if(isLoaded == true){
+                        crud.create();
+                        System.out.println();
+                        System.out.println("Record Successfully created!");
+                        System.out.println();                   
+                    }
+                    else {
+                        System.out.println();
+                        System.out.println("File not loaded!");
+                        System.out.println();
+                    }
+                    break;
+                
+                case 3:
+                    if(isLoaded == true){
+                        Airbnb theOne = new Airbnb();
+                        int chooseId;
+                        System.out.println("Type an id to be read: ");
+                        chooseId = scan.nextInt();
+                        theOne = crud.searchId(chooseId);
+                        theOne.print();    
+                    }
+                    else {
+                        System.out.println();
+                        System.out.println("File not loaded!");
+                        System.out.println();
+                    }
+                    break;
+                
+                case 4:
+                    if(isLoaded == true){
+                        int chooseId;
+                        System.out.println("Type an id to be updated: ");
+                        chooseId = scan.nextInt();
+                        crud.update(chooseId);
+                        System.out.println();
+                        System.out.println("Record Successfully updated!");
+                        System.out.println();
+                    }
+                    else {
+                        System.out.println();
+                        System.out.println("File not loaded!");
+                        System.out.println();
+                    }
+                    break;
+
+                case 5:
+                    if(isLoaded){
+                        int chooseId;
+                        System.out.println("Type an id to be deleted: ");
+                        chooseId = scan.nextInt();
+                        crud.delete(chooseId);
+                        System.out.println();
+                        System.out.println("Record Successfully deleted!");
+                        System.out.println();
+                    }
+                    else {
+                        System.out.println();
+                        System.out.println("File not loaded!");
+                        System.out.println();
+                    }
+                    break;
+        }
+        }
+        while(answer != 0);
     }
 
     //============================ CREATE AN OBJECT METHOD ============================

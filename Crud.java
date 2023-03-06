@@ -13,7 +13,7 @@ public class Crud {
     public int lastId;
     public int fileLength;
     public ArrayList<Airbnb> hostel;
-    String filename;
+    public String filename;
 
     //empty contructor
     public Crud() {
@@ -100,7 +100,7 @@ public class Crud {
             int pos = 0;
             filebytes.seek(pos);
 
-           int size;
+            int size;
 
             // read length of record, check isValid and check id
             // if id is false, move pointer to the next record

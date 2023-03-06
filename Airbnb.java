@@ -303,5 +303,8 @@ public class Airbnb {
         out.writeUTF(data);
     }
     
-    
+    public void fromByteArray(){
+        
+    }
+
 }
