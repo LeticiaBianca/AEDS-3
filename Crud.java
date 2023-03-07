@@ -89,6 +89,8 @@ public class Crud {
         if(aux == null){
             System.out.println("ID NOT FOUND!");
         }
+
+        filebytes.close();
         return aux;
     }
 

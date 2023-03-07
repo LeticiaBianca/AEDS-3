@@ -132,6 +132,7 @@ public class Main {
                     System.out.println("Invalid operation");  
                     System.out.println();  
             }
+            scan.close();
         }
         while(answer != 0);
     }

@@ -2,7 +2,6 @@
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.text.ParseException;
@@ -316,7 +315,7 @@ public class Airbnb {
 
         filebytes.seek(startByte);
 
-        int size = filebytes.readInt();
+        filebytes.readInt();
     
         isValid = filebytes.readBoolean();
         id = filebytes.readInt();
@@ -360,5 +359,7 @@ public class Airbnb {
         neighbourhood = new String(bytes7);
         
         rating = filebytes.readInt();
+
+        filebytes.close();
     }
 }
