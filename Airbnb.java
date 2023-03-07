@@ -2,7 +2,9 @@
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -246,6 +248,7 @@ public class Airbnb {
     //================================== PRINT METHOD ==================================
 
     public void print(){
+        System.out.println();
         System.out.print(id + " ");
         System.out.print(type + " ");
         System.out.print(amenities + " ");
@@ -263,6 +266,8 @@ public class Airbnb {
         System.out.print(name + " ");
         System.out.print(neighbourhood + " ");
         System.out.print(rating + " ");
+        System.out.println();
+        System.out.println();
     }
     
     //================================== CONVERT TO BYTES METHOD ==================================
@@ -275,8 +280,8 @@ public class Airbnb {
 
             out.writeInt(id);
             toByteString(type, out);
-            out.writeInt(amenities.size());
 
+            out.writeInt(amenities.size());
             for (String amenitie : amenities) {
                 toByteString(amenitie, out);
             }
@@ -299,12 +304,61 @@ public class Airbnb {
     //================================== CONVERT STRING TO BYTES METHOD ==================================
     //This method write the size followed for the string in binary
     public void toByteString(String data, DataOutputStream out) throws IOException{
-        out.writeInt(data.length());
-        out.writeUTF(data);
+        byte[] Stringbytes = data.getBytes("UTF-8");
+        out.writeInt(Stringbytes.length);
+        out.write(Stringbytes);
     }
     
-    public void fromByteArray(){
-        
-    }
+    //================================== CONVERT FROM BYTES METHOD ==================================
+    //this method read a record in the bytes file and cread an object
+    public void fromByteArray(int startByte, String filename) throws IOException{
+        RandomAccessFile filebytes = new RandomAccessFile(filename, "rw");
 
+        filebytes.seek(startByte);
+
+        int size = filebytes.readInt();
+    
+        isValid = filebytes.readBoolean();
+        id = filebytes.readInt();
+
+        //creat a byte array with the size read and read the bytes before converting to String 
+        byte[] bytes = new byte[filebytes.readInt()];
+        filebytes.read(bytes);    
+        type = new String(bytes);
+       
+        int sizeList = filebytes.readInt();
+        for(int i =0; i<sizeList; i++){
+            int test = filebytes.readInt();
+            byte[] bytes2 = new byte[test];
+            filebytes.read(bytes2);
+            amenities.add(new String(bytes2));
+        }
+        
+        accommodates = filebytes.readInt();
+         
+        byte[] bytes3 = new byte[filebytes.readInt()];
+        filebytes.read(bytes3);    
+        cancelation = new String(bytes3);
+
+        byte[] bytes4 = new byte[filebytes.readInt()];
+        filebytes.read(bytes4);    
+        cleaning = new String(bytes4);
+
+        byte[] bytes5 = new byte[filebytes.readInt()];
+        filebytes.read(bytes5);    
+        city = new String(bytes5);
+
+        long auxdata = filebytes.readLong();
+        review = new Date(auxdata);
+
+        byte[] bytes6 = new byte[filebytes.readInt()];
+        filebytes.read(bytes6);    
+        name = new String(bytes6);
+
+        byte[] bytes7 = new byte[filebytes.readInt()];
+        filebytes.read(bytes7);    
+        neighbourhood = new String(bytes7);
+        
+        rating = filebytes.readInt();
+    }
 }

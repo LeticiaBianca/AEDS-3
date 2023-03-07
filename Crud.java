@@ -5,21 +5,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.text.ParseException;
-import java.util.ArrayList;
 
 public class Crud {
 
     // declaration of variables
     public int lastId;
-    public int fileLength;
-    public ArrayList<Airbnb> hostel;
     public String filename;
 
     //empty contructor
     public Crud() {
         this.lastId = 0;
-        this.fileLength = 0;
-        this.hostel = new ArrayList<>();
         this.filename = "out.bin";
     }
 
@@ -40,16 +35,13 @@ public class Crud {
             reader = new BufferedReader(new FileReader(file));
 
             while((readline = reader.readLine()) != null) {
-                //adding the data in a list to make it easy to manipulate
-                hostel.add(fileLength, new Airbnb());
-                hostel.get(fileLength).read(readline);
-
-                bytesdata = hostel.get(fileLength).toByteArray();
+                Airbnb aux = new Airbnb();
+                aux.read(readline);
+                bytesdata = aux.toByteArray();
                 //write the size of the record before it
                 filebytes.writeInt(bytesdata.length);
                 filebytes.write(bytesdata);
-                lastId = hostel.get(fileLength).id;
-                fileLength++;
+                lastId = aux.id;
             }
         }catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
@@ -65,25 +57,34 @@ public class Crud {
         filebytes.close();
     }
 
-    public void negativeException(int id) throws Exception{
-        if(id < 0){
-            throw new Exception("INVALID ID!!!");
-        }
-        
-    }
-
     //================================ SEARCH BY ID METHOD ===========================
     public Airbnb searchId(int id) throws Exception{
 
-        Airbnb aux = new Airbnb();
-        for(int i = 0; i < fileLength; i++){
-            if(hostel.get(i).id == id){
-                aux = hostel.get(i);
-                i = fileLength;
+        RandomAccessFile filebytes = new RandomAccessFile(filename, "rw");
+        Airbnb aux = null;
+
+         //moving the pointer to the beginning of the file
+         int pos = 0;
+
+         // read the length of record, check isValid and check id
+         // if id is false, move pointer to the next record
+         // if id matches, crate a object with this record
+        while(filebytes.getFilePointer() != filebytes.length()){
+            filebytes.seek(pos);
+            int size = filebytes.readInt();
+            pos += 4; 
+            if(filebytes.readBoolean() == true){
+                if(filebytes.readInt() == id){
+                    filebytes.seek(pos);
+                    aux = new Airbnb();
+                    aux.fromByteArray(pos-4, "out.bin");
+                    break;
+                }else{
+                    pos += size;
+                }
+            }else{
+                pos += size;
             }
-            else{
-                aux = null;
-            }            
         }
         if(aux == null){
             System.out.println("ID NOT FOUND!");
@@ -100,18 +101,16 @@ public class Crud {
             int pos = 0;
             filebytes.seek(pos);
 
-            int size;
-
             // read length of record, check isValid and check id
             // if id is false, move pointer to the next record
             // if id matches, change isvalid to false
-            while((size = filebytes.readInt()) != -1){
+            while(filebytes.getFilePointer() != filebytes.length()){
+                int size = filebytes.readInt();
                 pos += 4; 
                 if(filebytes.readBoolean() == true){
                     if(filebytes.readInt() == id){
                         filebytes.seek(pos);
                         filebytes.writeBoolean(false);
-                        // rec(0, id);
                         return true;
                     }else{
                         pos += size;
@@ -127,19 +126,6 @@ public class Crud {
         return false;
     }
 
-    //recursive method to delete the record in the list
-    public void rec(int i, int id){
-        if(i<fileLength){
-            if(hostel.get(i).id == id){
-                Airbnb aux = new Airbnb();
-                aux = hostel.get(i);
-                aux.isValid = false;
-                hostel.set(i, aux);
-                i = fileLength;
-            }
-            rec(i++, id);
-        }
-    }
 
     //================================ CREATE A NEW AIRBNB ===========================
     public Airbnb create() throws ParseException, IOException{
@@ -156,27 +142,22 @@ public class Crud {
         System.out.println("ADDING NEW AIRBNB");
         Airbnb newHostel = Main.scan(id);
 
-        //addind in the list
-        hostel.add(newHostel);
-
         bytesdata = newHostel.toByteArray();
         //write the size of the record before it
         filebytes.writeInt(bytesdata.length);
         filebytes.write(bytesdata);
 
         lastId = newHostel.id;
-        fileLength++;
         
         filebytes.close();
         
         return null;
     }
 
-    //================================ CREATE A NEW AIRBNB ================================
+    //================================ UPDATE A AIRBNB ================================
     public Airbnb update(int id) throws IOException, ParseException{
 
         RandomAccessFile filebytes = new RandomAccessFile(filename, "rw");
-        int size;
         byte[] bytesdata;
         int pos = 0;
 
@@ -188,7 +169,8 @@ public class Crud {
         // if id is false, move pointer to the next record
         // if the id matches and the new record is smaller or the same size, just rewrite it
         //if the id matches and the new record is bigger, delete the old one and create the new record int he end of the file
-        while((size = filebytes.readInt()) != -1){ 
+        while(filebytes.getFilePointer() != filebytes.length()){ 
+            int size = filebytes.readInt();
             if(filebytes.readBoolean() == true){
                 if(filebytes.readInt() == id){
                     if(size >= bytesdata.length){
