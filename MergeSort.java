@@ -45,11 +45,35 @@ public class MergeSort {
     public ArrayList<Airbnb> quicksort(ArrayList<Airbnb> records, int start, int end) {
 
         if (start < end) {
-            int aux = separar(records, start, end);
+            int aux = separate(records, start, end);
             quicksort(records, start, aux - 1);
             quicksort(records, aux + 1, end);
         }
 
         return records;
+    }
+
+    public int separate(ArrayList<Airbnb> records, int start, int end) {
+        Airbnb pos = records.get(start);
+        int i = start + 1, j = end;
+
+        while(i <= j){
+            if (records.get(i).rating <= pos.rating)
+                i++;
+            else if (pos.rating < records.get(j).rating)
+                j--;
+            else {
+                Airbnb change = new Airbnb();
+                change = records.get(i);
+                records.set(i, records.get(j));
+                records.set(j, change);
+                i++;
+               j--;
+            }
+        }
+
+        records.set(start, records.get(j));
+        records.set(j, pos);
+        return j;
     }
 }
