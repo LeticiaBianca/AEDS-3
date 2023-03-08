@@ -1,5 +1,7 @@
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 
 public class MergeSort {
 
@@ -8,7 +10,7 @@ public class MergeSort {
     
 
     public MergeSort() throws FileNotFoundException {
-        this.blocksize = 100;
+        this.blocksize = 1000;
         this.filename = "out.bin";
         RandomAccessFile temp1 = new RandomAccessFile("TempFile1", "rw");
         RandomAccessFile temp2 = new RandomAccessFile("TempFile2", "rw");
@@ -16,9 +18,34 @@ public class MergeSort {
         RandomAccessFile temp4 = new RandomAccessFile("TempFile4", "rw");
     }
     
-    public void sort() throws FileNotFoundException{
+    public void sort() throws IOException{
+        int pos = 0;
+        int i = 0;
+        ArrayList<Airbnb> records = new ArrayList<>();
+
         RandomAccessFile filebytes = new RandomAccessFile(filename, "r");
 
+        while (filebytes.getFilePointer() != filebytes.length()) {
+            while(filebytes.getFilePointer() != filebytes.length() || i < blocksize){
+                records.add(new Airbnb());
+                records.get(i).fromByteArray(pos, filename);
+                int size = filebytes.readInt();
+                pos += 4; 
+                pos += size;
+                i++;
+                filebytes.seek(pos);
+            }
+            records = sortList(records);
+        }
         
+        filebytes.close();
+        
+    }
+
+    public ArrayList<Airbnb> sortList(ArrayList<Airbnb> records) {
+
+        
+
+        return records;
     }
 }

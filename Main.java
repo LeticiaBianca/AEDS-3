@@ -11,33 +11,32 @@ import java.util.Locale;
 public class Main {
 
     public static void main(String[] args) throws Exception{
-        int answer;
+        String answer;
         Crud crud = new Crud();
        
         boolean isLoaded = false;
+        Scanner sc = new Scanner(System.in);
 
         do {
-            Scanner scan = new Scanner(System.in);
             System.out.println("1 - to Load the file");
             System.out.println("2 - to Create a record on the file");
             System.out.println("3 - to Read a record");
             System.out.println("4 - to Update a record on the file");
             System.out.println("5 - Delete a record");
             System.out.println("6 - sorting algorithms");
-            System.out.println("0 - to exit the program");
+            System.out.println("0 - to exit the programm");
             System.out.println();
             System.out.print("Choose an operation: ");
-            
-            answer = scan.nextInt();
+            answer = sc.nextLine();
             System.out.println();
             
 
             switch (answer){
 
-                case 0:
+                case "0":
                     break;
                 
-                case 1:
+                case "1":
                     crud.loadFile();
                     isLoaded = true;
                     System.out.println();
@@ -45,12 +44,12 @@ public class Main {
                     System.out.println();
                     break;
 
-                case 2:
+                case "2":
                     if(isLoaded == true){
                         crud.create();
                         System.out.println();
-                        System.out.println("Record Successfully created!");
-                        System.out.println();                   
+                        System.out.println("Record successfully created!");
+                        System.out.println();
                     }
                     else {
                         System.out.println();
@@ -59,12 +58,12 @@ public class Main {
                     }
                     break;
                 
-                case 3:
+                case "3":
                     if(isLoaded == true){
                         Airbnb theOne = new Airbnb();
                         int chooseId;
                         System.out.println("Type an id to be read: ");
-                        chooseId = scan.nextInt();
+                        chooseId = sc.nextInt();
                         theOne = crud.searchId(chooseId);
                         theOne.print();    
                     }
@@ -75,14 +74,14 @@ public class Main {
                     }
                     break;
                 
-                case 4:
+                case "4":
                     if(isLoaded == true){
                         int chooseId;
                         System.out.println("Type an id to be updated: ");
-                        chooseId = scan.nextInt();
+                        chooseId = sc.nextInt();
                         crud.update(chooseId);
                         System.out.println();
-                        System.out.println("Record Successfully updated!");
+                        System.out.println("Record successfully updated!");
                         System.out.println();
                     }
                     else {
@@ -92,14 +91,14 @@ public class Main {
                     }
                     break;
 
-                case 5:
+                case "5":
                     if(isLoaded){
                         int chooseId;
                         System.out.println("Type an id to be deleted: ");
-                        chooseId = scan.nextInt();
+                        chooseId = sc.nextInt();
                         crud.delete(chooseId);
                         System.out.println();
-                        System.out.println("Record Successfully deleted!");
+                        System.out.println("Record successfully deleted!");
                         System.out.println();
                     }
                     else {
@@ -108,15 +107,17 @@ public class Main {
                         System.out.println();
                     }
                     break;
-                case 6:
+
+                case "6":
                     System.out.println();
                     System.out.println("1 - to Sort with Extern Merge Sort");
                     System.out.println("2 - to Sort with Variable Blocks Merge Sort");
                     System.out.println("3 - to Sort with Selection by Substitution");
+                    System.out.println("0 - to exit the programm");
                     
                     System.out.println();
                     System.out.print("Choose an operation: ");
-                    int option = scan.nextInt();
+                    int option = sc.nextInt();
 
                     switch(option){
                         case 1:
@@ -127,14 +128,15 @@ public class Main {
                         break;
                     }
                     break;
+
                 default:
                     System.out.println();
                     System.out.println("Invalid operation");  
                     System.out.println();  
             }
-            scan.close();
+            
         }
-        while(answer != 0);
+        while(answer != "0");
     }
 
     //============================ CREATE AN OBJECT METHOD ============================
