@@ -35,16 +35,20 @@ public class MergeSort {
                 i++;
                 filebytes.seek(pos);
             }
-            records = sortList(records);
+            records = quicksort(records, 0, records.size()-1);
         }
         
         filebytes.close();
         
     }
 
-    public ArrayList<Airbnb> sortList(ArrayList<Airbnb> records) {
+    public ArrayList<Airbnb> quicksort(ArrayList<Airbnb> records, int start, int end) {
 
-        
+        if (start < end) {
+            int aux = separar(records, start, end);
+            quicksort(records, start, aux - 1);
+            quicksort(records, aux + 1, end);
+        }
 
         return records;
     }
