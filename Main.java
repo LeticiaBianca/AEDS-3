@@ -121,7 +121,11 @@ public class Main {
 
                     switch(option){
                         case 1:
-                        break;
+                            System.out.println("here");
+                            MergeSort sort = new MergeSort();
+                            System.out.println("more here");
+                            sort.sort();
+                            break;
                         case 2:
                         break;
                         case 3:
@@ -137,6 +141,7 @@ public class Main {
             
         }
         while(answer != "0");
+
     }
 
     //============================ CREATE AN OBJECT METHOD ============================

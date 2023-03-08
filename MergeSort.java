@@ -19,6 +19,7 @@ public class MergeSort {
     }
     
     public void sort() throws IOException{
+        System.out.println("buuu");
         int pos = 0;
         int i = 0;
         ArrayList<Airbnb> records = new ArrayList<>();
@@ -26,7 +27,9 @@ public class MergeSort {
         RandomAccessFile filebytes = new RandomAccessFile(filename, "r");
 
         while (filebytes.getFilePointer() != filebytes.length()) {
+            System.out.println("i am here");
             while(filebytes.getFilePointer() != filebytes.length() || i < blocksize){
+                System.out.println("fuck u bitch");
                 records.add(new Airbnb());
                 records.get(i).fromByteArray(pos, filename);
                 int size = filebytes.readInt();
@@ -35,7 +38,10 @@ public class MergeSort {
                 i++;
                 filebytes.seek(pos);
             }
+            System.out.println(records);
             records = quicksort(records, 0, records.size()-1);
+            System.out.println(records);
+            records.clear();
         }
         
         filebytes.close();
