@@ -1,4 +1,3 @@
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -34,13 +33,14 @@ public class MergeSort {
             first = !first;
             int i =0;
             while(filebytes.getFilePointer() < filebytes.length() && i < blocksize){
-                filebytes.seek(pos);
                 records.add(new Airbnb());
                 records.get(i).fromByteArray(pos, filename);
+                filebytes.seek(pos);
                 int size = filebytes.readInt();
                 pos += 4; 
                 pos += size;
                 i++;
+                filebytes.seek(pos);
             }
 
             records = quicksort(records, 0, records.size()-1);
