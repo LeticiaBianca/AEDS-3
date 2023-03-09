@@ -121,9 +121,7 @@ public class Main {
 
                     switch(option){
                         case 1:
-                            System.out.println("here");
                             MergeSort sort = new MergeSort();
-                            System.out.println("more here");
                             sort.sort();
                             break;
                         case 2:

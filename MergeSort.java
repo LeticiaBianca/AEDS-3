@@ -7,45 +7,58 @@ public class MergeSort {
 
     public int blocksize;
     public String filename;
+    RandomAccessFile temp1;
+    RandomAccessFile temp2;
+    RandomAccessFile temp3;
+    RandomAccessFile temp4;
     
 
     public MergeSort() throws FileNotFoundException {
         this.blocksize = 1000;
         this.filename = "out.bin";
-        RandomAccessFile temp1 = new RandomAccessFile("TempFile1", "rw");
-        RandomAccessFile temp2 = new RandomAccessFile("TempFile2", "rw");
-        RandomAccessFile temp3 = new RandomAccessFile("TempFile3", "rw");
-        RandomAccessFile temp4 = new RandomAccessFile("TempFile4", "rw");
+        this.temp1 = new RandomAccessFile("TempFile1.bin", "rw");
+        this.temp2 = new RandomAccessFile("TempFile2.bin", "rw");
+        this.temp3 = new RandomAccessFile("TempFile3.bin", "rw");
+        this.temp4 = new RandomAccessFile("TempFile4.bin", "rw");
     }
     
     public void sort() throws IOException{
-        System.out.println("buuu");
         int pos = 0;
-        int i = 0;
+        boolean first = false;
         ArrayList<Airbnb> records = new ArrayList<>();
 
         RandomAccessFile filebytes = new RandomAccessFile(filename, "r");
 
         while (filebytes.getFilePointer() != filebytes.length()) {
-            System.out.println("i am here");
-            while(filebytes.getFilePointer() != filebytes.length() || i < blocksize){
-                System.out.println("fuck u bitch");
+            first = !first;
+            int i =0;
+            while(filebytes.getFilePointer() != filebytes.length() && i < blocksize){
+                filebytes.seek(pos);
                 records.add(new Airbnb());
                 records.get(i).fromByteArray(pos, filename);
                 int size = filebytes.readInt();
                 pos += 4; 
                 pos += size;
                 i++;
-                filebytes.seek(pos);
             }
-            System.out.println(records);
+
             records = quicksort(records, 0, records.size()-1);
-            System.out.println(records);
+
+            for (Airbnb record : records) {
+                if(first == true){
+                    byte[] bytesdata = record.toByteArray();
+                    temp1.writeInt(bytesdata.length);
+                    temp1.write(bytesdata);
+                }else{
+                    byte[] bytesdata = record.toByteArray();
+                    temp2.writeInt(bytesdata.length);
+                    temp2.write(bytesdata);
+                }
+            }            
             records.clear();
         }
         
-        filebytes.close();
-        
+        filebytes.close();    
     }
 
     public ArrayList<Airbnb> quicksort(ArrayList<Airbnb> records, int start, int end) {
@@ -64,9 +77,9 @@ public class MergeSort {
         int i = start + 1, j = end;
 
         while(i <= j){
-            if (records.get(i).rating <= pos.rating)
+            if (records.get(i).id <= pos.id)
                 i++;
-            else if (pos.rating < records.get(j).rating)
+            else if (pos.id < records.get(j).id)
                 j--;
             else {
                 Airbnb change = new Airbnb();
