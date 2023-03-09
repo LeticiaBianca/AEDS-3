@@ -69,7 +69,7 @@ public class Crud {
          // read the length of record, check isValid and check id
          // if id is false, move pointer to the next record
          // if id matches, crate a object with this record
-        while(filebytes.getFilePointer() != filebytes.length()){
+        while(filebytes.getFilePointer() < filebytes.length()){
             filebytes.seek(pos);
             int size = filebytes.readInt();
             pos += 4; 
@@ -106,7 +106,7 @@ public class Crud {
             // read length of record, check isValid and check id
             // if id is false, move pointer to the next record
             // if id matches, change isvalid to false
-            while(filebytes.getFilePointer() != filebytes.length()){
+            while(filebytes.getFilePointer() < filebytes.length()){
                 int size = filebytes.readInt();
                 pos += 4; 
                 if(filebytes.readBoolean() == true){
@@ -171,7 +171,7 @@ public class Crud {
         // if id is false, move pointer to the next record
         // if the id matches and the new record is smaller or the same size, just rewrite it
         //if the id matches and the new record is bigger, delete the old one and create the new record int he end of the file
-        while(filebytes.getFilePointer() != filebytes.length()){ 
+        while(filebytes.getFilePointer() < filebytes.length()){ 
             int size = filebytes.readInt();
             if(filebytes.readBoolean() == true){
                 if(filebytes.readInt() == id){

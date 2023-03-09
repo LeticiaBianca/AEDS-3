@@ -29,10 +29,10 @@ public class MergeSort {
 
         RandomAccessFile filebytes = new RandomAccessFile(filename, "r");
 
-        while (filebytes.getFilePointer() != filebytes.length()) {
+        while (filebytes.getFilePointer() < filebytes.length()) {
             first = !first;
             int i =0;
-            while(filebytes.getFilePointer() != filebytes.length() && i < blocksize){
+            while(filebytes.getFilePointer() < filebytes.length() && i < blocksize){
                 filebytes.seek(pos);
                 records.add(new Airbnb());
                 records.get(i).fromByteArray(pos, filename);
@@ -94,5 +94,9 @@ public class MergeSort {
         records.set(start, records.get(j));
         records.set(j, pos);
         return j;
+    }
+
+    public void intercalate() {
+        
     }
 }
