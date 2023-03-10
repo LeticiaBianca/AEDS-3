@@ -27,11 +27,11 @@ public class MergeSort {
         boolean first = false;
         ArrayList<Airbnb> records = new ArrayList<>();
 
-        RandomAccessFile filebytes = new RandomAccessFile(filename, "r");
+        RandomAccessFile filebytes = new RandomAccessFile(filename, "rw");
 
         while (filebytes.getFilePointer() < filebytes.length()) {
             first = !first;
-            int i =0;
+            int i = 0;
             while(filebytes.getFilePointer() < filebytes.length() && i < blocksize){
                 records.add(new Airbnb());
                 records.get(i).fromByteArray(pos, filename);
@@ -59,7 +59,7 @@ public class MergeSort {
             records.clear();
         }
 
-        intercalate(temp1, temp2, "TempFile1.bin", "TempFile1.bin", temp3, temp4, 1000);
+        intercalate(temp1, temp2, "TempFile1.bin", "TempFile2.bin", temp3, temp4, 1000);
         
         filebytes.close();    
     }
@@ -99,103 +99,129 @@ public class MergeSort {
         return j;
     }
 
-    public void intercalate(RandomAccessFile temp01, RandomAccessFile temp02, String name1, String name2, RandomAccessFile temp03, RandomAccessFile temp04, int blocks) throws IOException {
-        int pos1 =0, pos2 = 0;
+    public void intercalate(RandomAccessFile temp01, RandomAccessFile temp02, String name1, String name2, RandomAccessFile temp03, RandomAccessFile temp04, int blocks) {
+        System.out.println("to aqu");
         boolean first = false;
+        int pos1 = 0, pos2 = 0;
         Airbnb record1 = new Airbnb(), record2 = new Airbnb();
-        while(temp01.getFilePointer() < temp01.length() && temp02.getFilePointer() < temp02.length()){
-            
-            first = !first;
 
-            int i=0, j=0;
-            while(temp01.getFilePointer() < temp01.length() && temp02.getFilePointer() < temp02.length() && i<blocks && j<blocks){
+        try {
+            temp01.seek(pos1);
+            temp02.seek(pos2);
+        
+            while(temp01.getFilePointer() < temp01.length() && temp02.getFilePointer() < temp02.length()){  
+                System.out.println("i m here");  
+                first = !first;
+                int i=0, j=0;
 
-                temp01.seek(pos1);
-                temp02.seek(pos2);
-            
-                record1.fromByteArray(pos1, name1);
-                record2.fromByteArray(pos2, name2);
-
-                if(record1.id < record2.id){
-                    if(first == true){
-                        byte[] bytesdata = record1.toByteArray();
-                        temp03.writeInt(bytesdata.length);
-                        temp03.write(bytesdata);
-                        pos1 = pos1 + 4 + temp01.readInt();
-                        i++;
-                    }else{
-                        byte[] bytesdata = record1.toByteArray();
-                        temp04.writeInt(bytesdata.length);
-                        temp04.write(bytesdata);
-                        pos1 = pos1 + 4 + temp01.readInt();
-                        i++;
-                    }
-                }else{
-                    if(first == true){
-                        byte[] bytesdata = record2.toByteArray();
-                        temp03.writeInt(bytesdata.length);
-                        temp03.write(bytesdata);
-                        pos2 = pos2 + 4 + temp02.readInt();
-                        j++;
-                    }else{
-                        byte[] bytesdata = record2.toByteArray();
-                        temp04.writeInt(bytesdata.length);
-                        temp04.write(bytesdata);
-                        pos2 = pos2 + 4 + temp02.readInt();
-                        j++;
-                    }
-                }
-            }
-
-            if(i<blocks){
-                
-                while(temp01.getFilePointer() < temp01.length() && i<blocks){
-                    temp01.seek(pos1);            
-                    record1.fromByteArray(pos1, name1);
-
-                    if(first == true){
-                        byte[] bytesdata = record1.toByteArray();
-                        temp03.writeInt(bytesdata.length);
-                        temp03.write(bytesdata);
-                        pos1 = pos1 + 4 + temp02.readInt();
-                    }else{
-                        byte[] bytesdata = record1.toByteArray();
-                        temp04.writeInt(bytesdata.length);
-                        temp04.write(bytesdata);
-                        pos1 = pos1 + 4 + temp02.readInt();
-                    }
-                    i++;
-                }
-            } else if(j<blocks){
-                
-                while(temp02.getFilePointer() < temp02.length() && j<blocks){
-
+                while(temp01.getFilePointer() < temp01.length() && temp02.getFilePointer() < temp02.length() && i < blocks && j < blocks){
+                    temp01.seek(pos1);
                     temp02.seek(pos2);
+                
+                    record1.fromByteArray(pos1, name1);
                     record2.fromByteArray(pos2, name2);
 
-                    if(first == true){
-                        byte[] bytesdata = record2.toByteArray();
-                        temp03.writeInt(bytesdata.length);
-                        temp03.write(bytesdata);
-                        pos2 = pos2 + 4 + temp02.readInt();
-                    }else{
-                        byte[] bytesdata = record2.toByteArray();
-                        temp04.writeInt(bytesdata.length);
-                        temp04.write(bytesdata);
-                        pos2 = pos2 + 4 + temp02.readInt();
+                    if(record1.id < record2.id){
+                        if(first == true){
+                            byte[] bytesdata = record1.toByteArray();
+                            temp03.writeInt(bytesdata.length);
+                            temp03.write(bytesdata);
+                            pos1 = pos1 + 4 + temp01.readInt();
+                            i++;
+                        }
+                        else{
+                            byte[] bytesdata = record1.toByteArray();
+                            temp04.writeInt(bytesdata.length);
+                            temp04.write(bytesdata);
+                            pos1 = pos1 + 4 + temp01.readInt();
+                            i++;
+                        }
                     }
-                    j++;
+                    else{
+                        if(first == true){
+                            byte[] bytesdata = record2.toByteArray();
+                            temp03.writeInt(bytesdata.length);
+                            temp03.write(bytesdata);
+                            pos2 = pos2 + 4 + temp02.readInt();
+                            j++;
+                        }
+                        else{
+                            byte[] bytesdata = record2.toByteArray();
+                            temp04.writeInt(bytesdata.length);
+                            temp04.write(bytesdata);
+                            pos2 = pos2 + 4 + temp02.readInt();
+                            j++;
+                        }
+                    }
                 }
-            }   
-        }
-        temp01.setLength(0);
-        temp02.setLength(0);
-        if(temp04.length() > 0){
-            if(name1.compareTo("TempFile1.bin") == 0){
-                intercalate(temp3, temp4, "TempFile3.bin", "TempFile4.bin", temp1, temp2, blocks*2);
-            }else{
-                intercalate(temp1, temp2, "TempFile1.bin", "TempFile2.bin", temp3, temp4, blocks*2);
+
+                if(i < blocks){
+                    
+                    while(temp01.getFilePointer() < temp01.length() && i<blocks){
+                        temp01.seek(pos1);            
+                        record1.fromByteArray(pos1, name1);
+
+                        if(first == true){
+                            byte[] bytesdata = record1.toByteArray();
+                            temp03.writeInt(bytesdata.length);
+                            temp03.write(bytesdata);
+                            pos1 = pos1 + 4 + temp02.readInt();
+                        }
+                        else{
+                            byte[] bytesdata = record1.toByteArray();
+                            temp04.writeInt(bytesdata.length);
+                            temp04.write(bytesdata);
+                            pos1 = pos1 + 4 + temp02.readInt();
+                        }
+                        i++;
+                    }
+                } else if(j < blocks){
+                    
+                    while(temp02.getFilePointer() < temp02.length() && j<blocks){
+
+                        temp02.seek(pos2);
+                        record2.fromByteArray(pos2, name2);
+
+                        if(first == true){
+                            byte[] bytesdata = record2.toByteArray();
+                            temp03.writeInt(bytesdata.length);
+                            temp03.write(bytesdata);
+                            pos2 = pos2 + 4 + temp02.readInt();
+                        }
+                        else{
+                            byte[] bytesdata = record2.toByteArray();
+                            temp04.writeInt(bytesdata.length);
+                            temp04.write(bytesdata);
+                            pos2 = pos2 + 4 + temp02.readInt();
+                        }
+                        j++;
+                    }
+                }   
+            }
+            temp01.setLength(0);
+            temp02.setLength(0);
+
+            if(temp04.length() > 0){
+                System.out.println("ola ze");
+                if(name1.compareTo("TempFile1.bin") == 0){
+                    intercalate(temp3, temp4, "TempFile3.bin", "TempFile4.bin", temp1, temp2, blocks*2);
+                }
+                else{
+                    intercalate(temp1, temp2, "TempFile1.bin", "TempFile2.bin", temp3, temp4, blocks*2);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally{
+            try {
+                temp01.close();
+                temp02.close();
+                temp03.close();
+                temp04.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
+
 }

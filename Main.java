@@ -10,26 +10,25 @@ import java.util.Locale;
 
 public class Main {
 
+    public static Scanner scan = new Scanner(System.in);
+
     public static void main(String[] args) throws Exception{
         String answer;
         Crud crud = new Crud();
        
         boolean isLoaded = false;
-        Scanner sc = new Scanner(System.in);
 
         do {
-            System.out.println("1 - to Load the file");
-            System.out.println("2 - to Create a record on the file");
-            System.out.println("3 - to Read a record");
-            System.out.println("4 - to Update a record on the file");
+            System.out.println("1 - Load the file");
+            System.out.println("2 - Create a record on the file");
+            System.out.println("3 - Read a record");
+            System.out.println("4 - Update a record on the file");
             System.out.println("5 - Delete a record");
-            System.out.println("6 - sorting algorithms");
-            System.out.println("0 - to exit the programm");
+            System.out.println("6 - Sorting algorithms");
+            System.out.println("0 - Exit the programm");
             System.out.println();
             System.out.print("Choose an operation: ");
-            answer = sc.nextLine();
-            System.out.println();
-            
+            answer = scan.nextLine();
 
             switch (answer){
 
@@ -63,7 +62,7 @@ public class Main {
                         Airbnb theOne = new Airbnb();
                         int chooseId;
                         System.out.println("Type an id to be read: ");
-                        chooseId = sc.nextInt();
+                        chooseId = scan.nextInt();
                         theOne = crud.searchId(chooseId);
                         theOne.print();    
                     }
@@ -78,7 +77,7 @@ public class Main {
                     if(isLoaded == true){
                         int chooseId;
                         System.out.println("Type an id to be updated: ");
-                        chooseId = sc.nextInt();
+                        chooseId = scan.nextInt();
                         crud.update(chooseId);
                         System.out.println();
                         System.out.println("Record successfully updated!");
@@ -95,7 +94,7 @@ public class Main {
                     if(isLoaded){
                         int chooseId;
                         System.out.println("Type an id to be deleted: ");
-                        chooseId = sc.nextInt();
+                        chooseId = scan.nextInt();
                         crud.delete(chooseId);
                         System.out.println();
                         System.out.println("Record successfully deleted!");
@@ -110,14 +109,14 @@ public class Main {
 
                 case "6":
                     System.out.println();
-                    System.out.println("1 - to Sort with Extern Merge Sort");
-                    System.out.println("2 - to Sort with Variable Blocks Merge Sort");
-                    System.out.println("3 - to Sort with Selection by Substitution");
-                    System.out.println("0 - to exit the programm");
+                    System.out.println("1 - Sort with Extern Merge Sort");
+                    System.out.println("2 - Sort with Variable Blocks Merge Sort");
+                    System.out.println("3 - Sort with Selection by Substitution");
+                    System.out.println("0 - Exit the programm");
                     
                     System.out.println();
                     System.out.print("Choose an operation: ");
-                    int option = sc.nextInt();
+                    int option = scan.nextInt();
 
                     switch(option){
                         case 1:
@@ -150,8 +149,6 @@ public class Main {
         ArrayList<String> amenities = new ArrayList<String>();
         Date review;
         String amenitiesAUX, reviewAux;
-        
-        Scanner scan = new Scanner(System.in);
         
         System.out.println();
         System.out.println();
