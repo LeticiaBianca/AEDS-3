@@ -1,9 +1,12 @@
+// ===================== IMPORTING LIBRARIES ===========================
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
 public class VariableIntercalation {
+    // declaration of variables
     public int blocksize;
     public String filename;
     RandomAccessFile temp1;
@@ -12,6 +15,7 @@ public class VariableIntercalation {
     RandomAccessFile temp4;
     
 
+    //empty contructor
     public VariableIntercalation() throws FileNotFoundException {
         this.blocksize = 5000;
         this.filename = "out.bin";
@@ -21,13 +25,16 @@ public class VariableIntercalation {
         this.temp4 = new RandomAccessFile("TempFile4.bin", "rw");
     }
     
+     //This method sort the out.bin file and create a new file
     public void sort() throws IOException{
         int pos = 0;
+         //this boolean define if the block will be in the block
         boolean first = false;
         ArrayList<Airbnb> records = new ArrayList<>();
 
         RandomAccessFile filebytes = new RandomAccessFile(filename, "rw");
 
+         //split the file, sort the block and write it on a temporary file
         while (filebytes.getFilePointer() < filebytes.length()) {
             first = !first;
             int i = 0;
@@ -57,12 +64,23 @@ public class VariableIntercalation {
             }            
             records.clear();
         }
-
+        //intercalate the blocks until has one left
         intercalate(temp1, temp2, "TempFile1.bin", "TempFile2.bin", temp3, temp4);
+
+        //delete the files
+        File f2 = new File("TempFile2.bin");
+        f2.delete();
+
+        File f3 = new File("TempFile3.bin");
+        f3.delete();
+
+        File f4 = new File("TempFile4.bin");
+        f4.delete();
         
         filebytes.close();    
     }
 
+    //Quicksort method
     public ArrayList<Airbnb> quicksort(ArrayList<Airbnb> records, int start, int end) {
 
         if (start < end) {
@@ -97,8 +115,162 @@ public class VariableIntercalation {
         records.set(j, pos);
         return j;
     }
+
+    //return the size of the blocks
+    private int setBlocks(RandomAccessFile temp01, RandomAccessFile temp02, String name1, String name2, int pos1, int pos2) throws IOException {
+        
+        temp01.seek(pos1);
+        temp02.seek(pos2);
+
+        int i = 0;
+        Airbnb record1 = new Airbnb(), record2 = new Airbnb();
+        Airbnb record1Next = new Airbnb(), record2Next = new Airbnb();
+
+        record1.fromByteArray(pos1, name1);
+        record1Next.fromByteArray(pos1 + 4 + temp01.readInt(), name1);
+        record2.fromByteArray(pos2, name2);
+        record2Next.fromByteArray(pos2, name2);
+
+        //verify if the id of the next record is bigger then this file
+        while( record1.id <= record1Next.id){  
+            record1.fromByteArray(pos1, name1);
+            pos1 = pos1 + 4 + temp01.readInt();
+            temp01.seek(pos1);
+            i++;
+            
+            record1Next.fromByteArray(pos1, name1);
     
-    private void intercalate(RandomAccessFile temp01, RandomAccessFile temp02, String name1, String name2, RandomAccessFile temp03, RandomAccessFile temp04) {
+        }
+
+        return i;
     }
-    
+
+    //intercalate the blocks until has one left
+    public void intercalate(RandomAccessFile temp01, RandomAccessFile temp02, String name1, String name2, RandomAccessFile temp03, RandomAccessFile temp04) throws IOException {
+        //this boolean define if the block will be in the block
+        boolean first = false;
+        int pos1 = 0, pos2 = 0;
+        Airbnb record1 = new Airbnb(), record2 = new Airbnb();
+
+        try {
+            temp01.seek(pos1);
+            temp02.seek(pos2);
+        
+            while(temp01.getFilePointer() < temp01.length() && temp02.getFilePointer() < temp02.length()){  
+                first = !first;
+                int i=0, j=0;
+
+                //get the size of the block
+                int tam = setBlocks(temp01, temp02, name1, name2, pos1, pos2);
+
+                //intercalate until one of tthe files hit the end
+                while(temp01.getFilePointer() < temp01.length() && temp02.getFilePointer() < temp02.length() && i < tam && j < tam){
+                    temp01.seek(pos1);
+                    temp02.seek(pos2);
+                
+                    record1.fromByteArray(pos1, name1);
+                    record2.fromByteArray(pos2, name2);
+
+                    if(record1.id < record2.id){
+                        if(first == true){
+                            byte[] bytesdata = record1.toByteArray();
+                            temp03.writeInt(bytesdata.length);
+                            temp03.write(bytesdata);
+                            pos1 = pos1 + 4 + temp01.readInt();
+                            i++;
+                        }
+                        else{
+                            byte[] bytesdata = record1.toByteArray();
+                            temp04.writeInt(bytesdata.length);
+                            temp04.write(bytesdata);
+                            pos1 = pos1 + 4 + temp01.readInt();
+                            i++;
+                        }
+                    }
+                    else{
+                        if(first == true){
+                            byte[] bytesdata = record2.toByteArray();
+                            temp03.writeInt(bytesdata.length);
+                            temp03.write(bytesdata);
+                            pos2 = pos2 + 4 + temp02.readInt();
+                            j++;
+                        }
+                        else{
+                            byte[] bytesdata = record2.toByteArray();
+                            temp04.writeInt(bytesdata.length);
+                            temp04.write(bytesdata);
+                            pos2 = pos2 + 4 + temp02.readInt();
+                            j++;
+                        }
+                    }
+                }
+
+                // continue with the other file
+                if(i < tam){
+                    
+                    while(temp01.getFilePointer() < temp01.length() && i<tam){
+                        temp01.seek(pos1);            
+                        record1.fromByteArray(pos1, name1);
+
+                        if(first == true){
+                            byte[] bytesdata = record1.toByteArray();
+                            temp03.writeInt(bytesdata.length);
+                            temp03.write(bytesdata);
+                            pos1 = pos1 + 4 + temp02.readInt();
+                        }
+                        else{
+                            byte[] bytesdata = record1.toByteArray();
+                            temp04.writeInt(bytesdata.length);
+                            temp04.write(bytesdata);
+                            pos1 = pos1 + 4 + temp02.readInt();
+                        }
+                        i++;
+                    }
+                } else if(j < tam){
+                    
+                    while(temp02.getFilePointer() < temp02.length() && j<tam){
+
+                        temp02.seek(pos2);
+                        record2.fromByteArray(pos2, name2);
+
+                        if(first == true){
+                            byte[] bytesdata = record2.toByteArray();
+                            temp03.writeInt(bytesdata.length);
+                            temp03.write(bytesdata);
+                            pos2 = pos2 + 4 + temp02.readInt();
+                        }
+                        else{
+                            byte[] bytesdata = record2.toByteArray();
+                            temp04.writeInt(bytesdata.length);
+                            temp04.write(bytesdata);
+                            pos2 = pos2 + 4 + temp02.readInt();
+                        }
+                        j++;
+                    }
+                }   
+            }
+            //delete the content of the files
+            temp01.setLength(0);
+            temp02.setLength(0);
+
+             //see if the intercalation is done
+            if(temp04.length() > 0){
+                if(name1.compareTo("TempFile1.bin") == 0){
+                    intercalate(temp3, temp4, "TempFile3.bin", "TempFile4.bin", temp1, temp2);
+                }
+                else{
+                    intercalate(temp1, temp2, "TempFile1.bin", "TempFile2.bin", temp3, temp4);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally{
+            //close the files
+            temp01.close();
+            temp02.close();
+            temp03.close();
+            temp04.close();
+           
+        }
+    }
 }

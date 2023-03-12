@@ -163,7 +163,8 @@ public class Crud {
         byte[] bytesdata;
         int pos = 0;
 
-        System.out.println("UPDATING AIRBNB ID" +id);
+        System.out.println();
+        System.out.println("UPDATING AIRBNB ID " +id);
         Airbnb newHostel = Main.scan(id);
         bytesdata = newHostel.toByteArray();
         

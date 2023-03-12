@@ -1,3 +1,6 @@
+// ===================== IMPORTING LIBRARIES ===========================
+
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -5,6 +8,7 @@ import java.util.ArrayList;
 
 public class MergeSort {
 
+    // declaration of variables
     public int blocksize;
     public String filename;
     RandomAccessFile temp1;
@@ -12,7 +16,7 @@ public class MergeSort {
     RandomAccessFile temp3;
     RandomAccessFile temp4;
     
-
+    //empty contructor
     public MergeSort() throws FileNotFoundException {
         this.blocksize = 1000;
         this.filename = "out.bin";
@@ -21,14 +25,17 @@ public class MergeSort {
         this.temp3 = new RandomAccessFile("TempFile3.bin", "rw");
         this.temp4 = new RandomAccessFile("TempFile4.bin", "rw");
     }
-    
+
+    //This method sort the out.bin file and create a new file
     public void sort() throws IOException{
         int pos = 0;
+        //this boolean define if the block will be in the block
         boolean first = false;
-        ArrayList<Airbnb> records = new ArrayList<>();
 
+        ArrayList<Airbnb> records = new ArrayList<>();
         RandomAccessFile filebytes = new RandomAccessFile(filename, "rw");
 
+        //split the file, sort the block and write it on a temporary file
         while (filebytes.getFilePointer() < filebytes.length()) {
             first = !first;
             int i = 0;
@@ -59,11 +66,24 @@ public class MergeSort {
             records.clear();
         }
 
+        //intercalate the blocks until has one left
         intercalate(temp1, temp2, "TempFile1.bin", "TempFile2.bin", temp3, temp4, 1000);
+
+        //delete the files
+        File f2 = new File("TempFile2.bin");
+        f2.delete();
+
+        File f3 = new File("TempFile3.bin");
+        f3.delete();
+
+        File f4 = new File("TempFile4.bin");
+        f4.delete();
+
         
         filebytes.close();    
     }
 
+    //Quicksort method
     public ArrayList<Airbnb> quicksort(ArrayList<Airbnb> records, int start, int end) {
 
         if (start < end) {
@@ -98,9 +118,9 @@ public class MergeSort {
         records.set(j, pos);
         return j;
     }
-
-    public void intercalate(RandomAccessFile temp01, RandomAccessFile temp02, String name1, String name2, RandomAccessFile temp03, RandomAccessFile temp04, int blocks) {
-        System.out.println("to aqu");
+     //intercalate the blocks until has one left
+    public void intercalate(RandomAccessFile temp01, RandomAccessFile temp02, String name1, String name2, RandomAccessFile temp03, RandomAccessFile temp04, int blocks) throws IOException {
+       //this boolean define if the block will be in the block
         boolean first = false;
         int pos1 = 0, pos2 = 0;
         Airbnb record1 = new Airbnb(), record2 = new Airbnb();
@@ -110,10 +130,10 @@ public class MergeSort {
             temp02.seek(pos2);
         
             while(temp01.getFilePointer() < temp01.length() && temp02.getFilePointer() < temp02.length()){  
-                System.out.println("i m here");  
                 first = !first;
                 int i=0, j=0;
 
+                //intercalate until one of tthe files hit the end
                 while(temp01.getFilePointer() < temp01.length() && temp02.getFilePointer() < temp02.length() && i < blocks && j < blocks){
                     temp01.seek(pos1);
                     temp02.seek(pos2);
@@ -155,6 +175,7 @@ public class MergeSort {
                     }
                 }
 
+                // continue with the other file
                 if(i < blocks){
                     
                     while(temp01.getFilePointer() < temp01.length() && i<blocks){
@@ -198,11 +219,12 @@ public class MergeSort {
                     }
                 }   
             }
+            //delete the content of the files
             temp01.setLength(0);
             temp02.setLength(0);
 
+            //see if the intercalation is done
             if(temp04.length() > 0){
-                System.out.println("ola ze");
                 if(name1.compareTo("TempFile1.bin") == 0){
                     intercalate(temp3, temp4, "TempFile3.bin", "TempFile4.bin", temp1, temp2, blocks*2);
                 }
@@ -213,14 +235,12 @@ public class MergeSort {
         } catch (IOException e) {
             e.printStackTrace();
         }finally{
-            try {
-                temp01.close();
-                temp02.close();
-                temp03.close();
-                temp04.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            //close the files
+            temp01.close();
+            temp02.close();
+            temp03.close();
+            temp04.close();
+           
         }
     }
 

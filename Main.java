@@ -63,6 +63,7 @@ public class Main {
                         int chooseId;
                         System.out.println("Type an id to be read: ");
                         chooseId = scan.nextInt();
+                        scan.nextLine();
                         theOne = crud.searchId(chooseId);
                         theOne.print();    
                     }
@@ -78,6 +79,7 @@ public class Main {
                         int chooseId;
                         System.out.println("Type an id to be updated: ");
                         chooseId = scan.nextInt();
+                        scan.nextLine();
                         crud.update(chooseId);
                         System.out.println();
                         System.out.println("Record successfully updated!");
@@ -95,6 +97,7 @@ public class Main {
                         int chooseId;
                         System.out.println("Type an id to be deleted: ");
                         chooseId = scan.nextInt();
+                        scan.nextLine();
                         crud.delete(chooseId);
                         System.out.println();
                         System.out.println("Record successfully deleted!");
@@ -108,25 +111,52 @@ public class Main {
                     break;
 
                 case "6":
-                    System.out.println();
-                    System.out.println("1 - Sort with Extern Merge Sort");
-                    System.out.println("2 - Sort with Variable Blocks Merge Sort");
-                    System.out.println("3 - Sort with Selection by Substitution");
-                    System.out.println("0 - Exit the programm");
-                    
-                    System.out.println();
-                    System.out.print("Choose an operation: ");
-                    int option = scan.nextInt();
+                    if(isLoaded){
+                        System.out.println();
+                        System.out.println("1 - Sort with Extern Merge Sort");
+                        System.out.println("2 - Sort with Variable Blocks Merge Sort");
+                        System.out.println("3 - Sort with Selection by Substitution");
+                        System.out.println("0 - Back to menu");
+                        
+                        System.out.println();
+                        System.out.print("Choose an operation: ");
+                        int option = scan.nextInt();
+                        scan.nextLine();
 
-                    switch(option){
-                        case 1:
-                            MergeSort sort = new MergeSort();
-                            sort.sort();
+                        switch(option){
+                            case 0:
+                                break;
+                            case 1:
+                                MergeSort sort = new MergeSort();
+                                sort.sort();
+                                System.out.println();
+                                System.out.println("File sorted with success!");
+                                System.out.println();
+                                break;
+                            case 2:
+                                VariableIntercalation sort2 = new VariableIntercalation();
+                                sort2.sort();
+                                System.out.println();
+                                System.out.println("File sorted with success!");
+                                System.out.println();
+                                break;
+                            case 3:
+                                HeapSort sort3 = new HeapSort();
+                                sort3.sort();
+                                System.out.println();
+                                System.out.println("File sorted with success!");
+                                System.out.println();
                             break;
-                        case 2:
-                        break;
-                        case 3:
-                        break;
+                            
+                            default:
+                                System.out.println();
+                                System.out.println("Invalid operation");  
+                                System.out.println();
+                        }
+                    } else {
+                            System.out.println();
+                            System.out.println("File not loaded!");
+                            System.out.println();
                     }
                     break;
 
@@ -137,7 +167,7 @@ public class Main {
             }
             
         }
-        while(answer != "0");
+        while(answer.compareTo("0") != 0);
 
     }
 
@@ -209,7 +239,6 @@ public class Main {
         
         Airbnb newHostel = new Airbnb(id, type, amenities, accommodates, cancelation, cleaning, city, review, name, neighbourhood, rating);
 
-        scan.close();
         return newHostel;
     }
 }
