@@ -39,7 +39,7 @@ public class Main {
                     crud.loadFile();
                     isLoaded = true;
                     System.out.println();
-                    System.out.println("Successfully loaded!");
+                    System.out.println("Successfulliiiiy loaded!");
                     System.out.println();
                     break;
 
