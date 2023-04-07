@@ -28,6 +28,10 @@ class Key {
     
 }
 
+/**
+ * Node
+ */
+
 public class Node {
     int num; // Node nunber of keys
     Key[] key; // Array of keys with the id and the position
@@ -49,20 +53,20 @@ public class Node {
         this.num = num;
     }
 
-    public Key[] getKey() {
-        return key;
+    public Key getKey(int position) {
+        return key[position];
     }
 
-    public void setKey(Key[] key) {
-        this.key = key;
+    public void setKey(Key key, int position) {
+        this.key[position] = key;
     }
 
-    public Node[] getChildren() {
-        return children;
+    public Node getChildren(int position) {
+        return children[position];
     }
 
-    public void setChildren(Node[] children) {
-        this.children = children;
+    public void setChildren(Node children, int position) {
+        this.children[position] = children;
     }
 
     public Boolean getIsLeaf() {
