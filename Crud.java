@@ -1,6 +1,7 @@
 // ===================== IMPORTING LIBRARIES ===========================
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -11,11 +12,14 @@ public class Crud {
     // declaration of variables
     public int lastId;
     public String filename;
+    public Btree index;
 
     //empty contructor
-    public Crud() {
+    public Crud() throws FileNotFoundException {
         this.lastId = 0;
         this.filename = "out.bin";
+        this.index = new Btree();
+        
     }
 
     // =================================== LOAD FILE IN BINARY METHOD ==================================
@@ -26,10 +30,9 @@ public class Crud {
         byte[] bytesdata;
         String file = "Airbnb.csv";
         String readline;
-        
 
         RandomAccessFile filebytes = new RandomAccessFile(filename, "rw");
-        
+        int pos = 0;
 
         try{
             reader = new BufferedReader(new FileReader(file));
@@ -40,9 +43,14 @@ public class Crud {
                 bytesdata = aux.toByteArray();
                 //write the size of the record before it
                 filebytes.writeInt(bytesdata.length);
+                pos += 4;
                 filebytes.write(bytesdata);
                 lastId = aux.id;
+                Key k = new Key(aux.id, pos);
+                index.insert(k);
+                pos += bytesdata.length;
             }
+
         }catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
         } finally{
@@ -54,6 +62,7 @@ public class Crud {
                 }
             }
         }
+        index.printFile();
         filebytes.close();
     }
 
@@ -201,6 +210,15 @@ public class Crud {
         filebytes.close();
         
         return null;
+    }
+    
+    public Airbnb getByPos(int pos) throws IOException{
+        RandomAccessFile filebytes = new RandomAccessFile(filename, "rw");
+        Airbnb aux = null;
+        filebytes.seek(pos);
+        aux = new Airbnb();
+        aux.fromByteArray(pos-4, "out.bin");
+        return aux;
     }
 }
 

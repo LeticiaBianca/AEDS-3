@@ -33,10 +33,10 @@ class Key {
  */
 
 public class Node {
-    int num; // Node nunber of keys
-    Key[] key; // Array of keys with the id and the position
-    Node[] children;
-    Boolean isLeaf;
+    private int num; // Node number of keys
+    private Key[] key; // Array of keys with the id and the position
+    private Node[] children;
+    private Boolean isLeaf;
 
     public Node() {
         num  = 0;

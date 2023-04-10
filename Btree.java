@@ -1,18 +1,27 @@
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
 /**
  * ArvoreB
  */
-public class ArvoreB {
+public class Btree {
 
     int num;
     Node root;
+    public String BtreeFile;
+    RandomAccessFile fileBtree;
 
-    public ArvoreB(Node root, int num) {
+    public Btree(Node root, int num) {
         this.root = root;
         this.num = num;
     }
-    public ArvoreB() {
+    public Btree() throws FileNotFoundException{
         this.root = new Node();
-        num = 0;
+        this.num = 0;
+        this.BtreeFile = "Btree.bin";
+        
+       this.fileBtree = new RandomAccessFile(BtreeFile, "rw");
     }
     public Node getRoot() {
         return root;
@@ -33,19 +42,18 @@ public class ArvoreB {
             root.setNum(1);
         }else{
             Node r = root;
-            if(root.getNum() == 7){// verify if the root is full
+            if(root.getNum() != 7){// verify if the root is full
+                insertNotFull(r, k);
+            }else{
                 Node newNode = new Node();
-                root = new Node();
                 newNode.setIsLeaf(false);
                 newNode.setChildren(r, 0);
                 splitNode(newNode, 0, r);
                 insertNotFull(newNode, k);
-            }else{
-                insertNotFull(r, k);
+                root = newNode;
             }
         }
         num++;
-        //CÓDIGO PARA JOGAR NO ARQUIVO!
     }
     
     private void splitNode(Node r, int i, Node newNode) {
@@ -55,13 +63,14 @@ public class ArvoreB {
         newNode2.setIsLeaf(newNode.getIsLeaf());
 
         for (int j = 0; j < minimumsize; j++) {
-            newNode2.setKey(newNode.getKey(j), j+minimumsize);
+            newNode2.setKey(newNode.getKey(j), j+minimumsize+1);
             newNode.setNum(newNode.getNum()-1);
+            newNode2.setNum(newNode2.getNum()+1);
         }
 
         if(newNode2.getIsLeaf() == false){
             for (int j = 0; j < minimumsize; j++){
-                newNode2.setChildren(newNode.getChildren(j+minimumsize), j);
+                newNode2.setChildren(newNode.getChildren(j+minimumsize+1 ), j);
             }
         }
         for (int j = r.getNum(); j > i; j--) {
@@ -102,6 +111,52 @@ public class ArvoreB {
                 }
             }
             insertNotFull(node.getChildren(i), k);
+        }
+    }
+
+    public void printFile() throws IOException {
+        fileBtree.writeInt(4);
+        printFile(root);
+
+    }
+
+    private void printFile(Node x) throws IOException{
+        fileBtree.writeInt(x.getNum());
+        fileBtree.writeInt(-1);
+        for (int i = 0; i < 7; i++) {
+            if(i < x. getNum()){
+                fileBtree.writeInt(x.getKey(i).getId());
+                fileBtree.writeInt(x.getKey(i).getPos());
+            }else{
+                fileBtree.writeInt(0);
+                fileBtree.writeInt(0);
+            }
+            fileBtree.writeInt(-1);
+        }
+        if(x.getIsLeaf() == false){
+            for (int i = 0; i <= x.getNum(); i++) {    
+               printFile(x.getChildren(i));
+            }
+        }
+    }
+
+    public Key searchKey(int k){
+        return searchKey(k, root);
+    }
+
+    private Key searchKey(int k, Node x) {
+        int i = 0;
+        while (i < x.getNum()-1 && (k > x.getKey(i).getId())) { 
+            i++;
+        }
+        if ((i < x.getNum()-1) && (k == x.getKey(i).getId())) {
+            return x.getKey(i);
+        }
+        if(x.getIsLeaf() == false){
+            return searchKey(k, x.getChildren(i));
+        }else{
+            System.out.println("retornando null");
+            return null;
         }
     }
 
