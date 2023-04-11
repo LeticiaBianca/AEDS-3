@@ -12,14 +12,15 @@ public class Crud {
     // declaration of variables
     public int lastId;
     public String filename;
-    public Btree index;
+    public Btree iBtree;
+    public Hashing iHash;
 
     //empty contructor
     public Crud() throws FileNotFoundException {
         this.lastId = 0;
         this.filename = "out.bin";
-        this.index = new Btree();
-        
+        this.iBtree = new Btree();
+        this.iHash = new Hashing(1);
     }
 
     // =================================== LOAD FILE IN BINARY METHOD ==================================
@@ -46,12 +47,20 @@ public class Crud {
                 filebytes.write(bytesdata);
                 lastId = aux.id;
 
-                //BTREE
+                //Key for index files
                 pos += 4;
                 Key k = new Key(aux.id, pos);
-                index.insert(k);
-                pos += bytesdata.length;
+                
                 //BTREE
+                iBtree.insert(k);
+                //BTREE
+
+                //HASHING
+                //iHash.insert(k);
+                //HASHING
+
+                pos += bytesdata.length;
+
             }
 
         }catch (IOException e) {
@@ -65,7 +74,7 @@ public class Crud {
                 }
             }
         }
-        index.printFile();
+        iBtree.printFile();
         filebytes.close();
     }
 
@@ -164,15 +173,19 @@ public class Crud {
 
         lastId = newHostel.id;
 
-    
-        //BTREE
+        //Key for index files
         Key k = new Key(newHostel.id, len+4);
-        index.insert(k);
-        index.printFile();
+        
         //BTREE
+        iBtree.insert(k);
+        iBtree.printFile();
+        //BTREE
+
+        //HASHING
+        iHash.insert(k);
+        //HASHING       
         
         filebytes.close();
-        
         
         return null;
     }
@@ -209,11 +222,18 @@ public class Crud {
                         filebytes.seek(filebytes.length());
                         filebytes.writeInt(bytesdata.length);
                         filebytes.write(bytesdata);
-                        //BTREE
+                        
+                        //Key for index files
                         Key k = new Key(newHostel.id, len+4);
-                        index.insert(k);
-                        index.printFile();
+        
                         //BTREE
+                        iBtree.insert(k);
+                        iBtree.printFile();
+                        //BTREE
+
+                        //HASHING
+                        iHash.insert(k);
+                        //HASHING       
                     }
                 }else{
                     pos  = pos + size + 4;

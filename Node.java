@@ -1,43 +1,17 @@
 /**
- * Key
- */
-class Key {
-    int id; 
-    int pos;
-
-    public Key(int id, int pos) {
-        this.id = id;
-        this.pos = pos;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getPos() {
-        return pos;
-    }
-
-    public void setPos(int pos) {
-        this.pos = pos;
-    }
-    
-}
-
-/**
  * Node
  */
 
+//this class is the Node from the Btree
 public class Node {
+
+    // declaration of variables
     private int num; // Node number of keys
     private Key[] key; // Array of keys with the id and the position
-    private Node[] children;
-    private Boolean isLeaf;
+    private Node[] children;//Array with all the childrens
+    private Boolean isLeaf; 
 
+    //empty constructor
     public Node() {
         num  = 0;
         key = new Key[7];
@@ -45,6 +19,7 @@ public class Node {
         isLeaf = true;
     }
 
+    //getters and setters 
     public int getNum() {
         return num;
     }
@@ -77,9 +52,11 @@ public class Node {
         this.isLeaf = isLeaf;
     }
 
+    //method to split a Node who is called in the root
     public void splitChildren(Node c1, int i) {
         Node c2 = new Node();
-        c2.isLeaf = c2.isLeaf;
+        //set the 
+        c2.isLeaf = c1.isLeaf;
         int k = 0;
         for (int j = 6; j > 3; j--) {
             c2.setKey(c1.getKey(j), k);
