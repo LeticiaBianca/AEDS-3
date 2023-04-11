@@ -38,20 +38,37 @@ public class Btree {
 
     public void insert(Key k){//insertion of an element in the root
         if(root.getNum() == 0){//verify if the root is empty
+            System.out.println("RAIZ VAZIA");
             root.setKey(k, 0);//insertion of the key in the position 0
             root.setNum(1);
         }else{
-            Node r = root;
-            if(root.getNum() != 7){// verify if the root is full
-                insertNotFull(r, k);
-            }else{
-                Node newNode = new Node();
-                newNode.setIsLeaf(false);
-                newNode.setChildren(r, 0);
-                splitNode(newNode, 0, r);
-                insertNotFull(newNode, k);
-                root = newNode;
+            if(root.getNum() == 7){
+                System.out.println("raiz cheia");
+                Node newRoot = new Node();
+                newRoot.setIsLeaf(false);
+                newRoot.setChildren(root, 0);
+                newRoot.splitChildren(root, 0);
+                int i = 0;
+                if(newRoot.getKey(0).id < k.id){
+                    i++;
+                }
+                newRoot.getChildren(i).insertNotFull(k);
+                root = newRoot;
+            }else{                
+                System.out.println(root.getIsLeaf());
+                root.insertNotFull(k);
             }
+            // Node r = root;
+            // if(root.getNum() != 7){// verify if the root is full
+            //     insertNotFull(r, k);
+            // }else{
+            //     Node newNode = new Node();
+            //     newNode.setIsLeaf(false);
+            //     newNode.setChildren(r, 0);
+            //     splitNode(newNode, 0, r);
+            //     insertNotFull(newNode, k);
+            //     root = newNode;
+            // }
         }
         num++;
     }
@@ -115,6 +132,7 @@ public class Btree {
     }
 
     public void printFile() throws IOException {
+        fileBtree.seek(0);
         fileBtree.writeInt(4);
         printFile(root);
 

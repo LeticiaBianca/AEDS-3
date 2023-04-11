@@ -43,12 +43,15 @@ public class Crud {
                 bytesdata = aux.toByteArray();
                 //write the size of the record before it
                 filebytes.writeInt(bytesdata.length);
-                pos += 4;
                 filebytes.write(bytesdata);
                 lastId = aux.id;
+
+                //BTREE
+                pos += 4;
                 Key k = new Key(aux.id, pos);
                 index.insert(k);
                 pos += bytesdata.length;
+                //BTREE
             }
 
         }catch (IOException e) {
@@ -145,6 +148,7 @@ public class Crud {
         RandomAccessFile filebytes = new RandomAccessFile(filename, "rw");
         
         //move the pointer to the end of the file
+        int len = (int) filebytes.length();
         filebytes.seek(filebytes.length());
 
         //generate the next id
@@ -159,8 +163,16 @@ public class Crud {
         filebytes.write(bytesdata);
 
         lastId = newHostel.id;
+
+    
+        //BTREE
+        Key k = new Key(newHostel.id, len+4);
+        index.insert(k);
+        index.printFile();
+        //BTREE
         
         filebytes.close();
+        
         
         return null;
     }
@@ -193,9 +205,15 @@ public class Crud {
                     }
                     else{
                         delete(id);
+                        int len  = (int) filebytes.length();
                         filebytes.seek(filebytes.length());
                         filebytes.writeInt(bytesdata.length);
                         filebytes.write(bytesdata);
+                        //BTREE
+                        Key k = new Key(newHostel.id, len+4);
+                        index.insert(k);
+                        index.printFile();
+                        //BTREE
                     }
                 }else{
                     pos  = pos + size + 4;
@@ -213,12 +231,13 @@ public class Crud {
     }
     
     public Airbnb getByPos(int pos) throws IOException{
-        RandomAccessFile filebytes = new RandomAccessFile(filename, "rw");
-        Airbnb aux = null;
-        filebytes.seek(pos);
-        aux = new Airbnb();
-        aux.fromByteArray(pos-4, "out.bin");
-        return aux;
+        try (RandomAccessFile filebytes = new RandomAccessFile(filename, "rw")) {
+            Airbnb aux = null;
+            filebytes.seek(pos);
+            aux = new Airbnb();
+            aux.fromByteArray(pos-4, "out.bin");
+            return aux;
+        }
     }
 }
 

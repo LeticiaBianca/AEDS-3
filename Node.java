@@ -76,5 +76,50 @@ public class Node {
     public void setIsLeaf(Boolean isLeaf) {
         this.isLeaf = isLeaf;
     }
+
+    public void splitChildren(Node c1, int i) {
+        Node c2 = new Node();
+        c2.isLeaf = c2.isLeaf;
+        int k = 0;
+        for (int j = 6; j > 3; j--) {
+            c2.setKey(c1.getKey(j), k);
+            k++;
+            c2.num++;
+            c1.num--;
+        }
+        if(c1.isLeaf == false){
+            k=0;
+            for (int j = 7; j > 3; j--) {
+                c2.setChildren(c1.getChildren(j), k);
+                k++;
+            }
+        }
+        setChildren(c2, i+1);
+        setKey(c1.getKey(3), i);
+        c1.num--;
+    }
+
+    public void insertNotFull(Key k) {
+        int i = num - 1;
+        if(isLeaf){
+            while(i >= 0 && getKey(i).id > k.id){
+                setKey(getKey(i), i+1);
+                i--;
+            }
+            setKey(k, i+1);
+            num++;
+        }else{
+            while(i >= 0 && getKey(i).id > k.id){
+                i--;
+            }
+            if(getChildren(i+1).getNum() == 6){
+                splitChildren(getChildren(i+1), i+1);
+                if(getKey(i+1).id < k.id){
+                    i++;
+                }
+            }
+            getChildren(i+1).insertNotFull(k);
+        }
+    }
     
 }

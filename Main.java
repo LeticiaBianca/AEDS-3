@@ -26,6 +26,7 @@ public class Main {
             System.out.println("5 - Delete a record");
             System.out.println("6 - Sorting algorithms");
             System.out.println("7 - Read with Btree");
+            System.out.println("8 - Read with Hashing");
             System.out.println("0 - Exit the programm");
             System.out.println();
             System.out.print("Choose an operation: ");
@@ -174,6 +175,27 @@ public class Main {
                         }else{
                             System.out.println("id not found");
                         }
+                       
+                    }else {
+                        System.out.println();
+                        System.out.println("File not loaded!");
+                        System.out.println();
+                    }   
+                    break;
+                case "8":
+                    if(isLoaded){
+                        Airbnb theOne = new Airbnb();
+                        // Btree index = new Btree();
+                        System.out.println("Type an id to be read: ");
+                        int chooseId = scan.nextInt();
+                        scan.nextLine();
+                        // Key res = index.searchKey(chooseId);
+                        // if(res != null){
+                        //     theOne =  crud.getByPos(res.getPos());
+                        //     theOne.print();  
+                        // }else{
+                        //     System.out.println("id not found");
+                        // }
                        
                     }else {
                         System.out.println();
