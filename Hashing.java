@@ -1,4 +1,6 @@
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
@@ -7,16 +9,18 @@ import java.util.ArrayList;
 public class Hashing {
     private int p;
     private int bucketSize;
-    private ArrayList<Integer> directory;
-    RandomAccessFile fileHash;
-    private ArrayList<Key[]> bucketList;
+    private RandomAccessFile fileHash;
+    private ArrayList<ArrayList<Key>> bucketList;
     
     public Hashing(int p) throws FileNotFoundException {
         this.p = p;
         bucketSize = 293;
-        directory = new ArrayList<Integer>((int)Math.pow(2, p));
-        bucketList = new ArrayList<Key[]>();
         fileHash = new RandomAccessFile("Hash.bin", "rw");
+
+        bucketList = new ArrayList<ArrayList<Key>>((int)Math.pow(2, p));
+        for (int i = 0; i < (int)Math.pow(2, p); i++) { 
+            bucketList.add(new ArrayList<Key>(bucketSize));
+        }
     }
 
     public int getP() {
@@ -33,16 +37,6 @@ public class Hashing {
         return bucketSize;
     }
 
-    public ArrayList<Integer> getDirectory() {
-        return directory;
-    }
-
-
-    public void setDirectory(ArrayList<Integer> directory) {
-        this.directory = directory;
-    }
-
-
     public RandomAccessFile getFileHash() {
         return fileHash;
     }
@@ -53,12 +47,12 @@ public class Hashing {
     }
 
 
-    public ArrayList<Key[]> getBucketList() {
+    public ArrayList<ArrayList<Key>> getBucketList() {
         return bucketList;
     }
 
 
-    public void setBucketList(ArrayList<Key[]> bucketList) {
+    public void setBucketList(ArrayList<ArrayList<Key>> bucketList) {
         this.bucketList = bucketList;
     }
 
@@ -69,8 +63,36 @@ public class Hashing {
     public void insert(Key k){
         int index = h(k.id, p);
 
-        if(directory.get(index) == bucketSize){
-            //tem que ter um p interno de cada 1???
+        if(bucketList.get(index).size() >= bucketSize){
+            int newp = p + 1;
+            ArrayList<ArrayList<Key>> newbucketList = new ArrayList<>((int)Math.pow(2, newp));
+
+            for (int i = 0; i < (int)Math.pow(2, newp); i++) { 
+                bucketList.add(new ArrayList<Key>(bucketSize));
+            }
+
+            for (ArrayList<Key> bucket : bucketList) {
+                for (Key each : bucket){
+                    Key key = each;
+                    int newIndex = h(key.getId(), newp);
+                    newbucketList.get(newIndex).add(key);
+                }
+            }
+            p = newp;
+            bucketList = newbucketList;
+
+            index = h(k.getId(), p);
+        }
+        bucketList.get(index).add(k);
+    }
+
+    public void printFile() throws IOException {
+        for (ArrayList<Key> directory : bucketList) {
+            fileHash.writeInt(directory.size());
+            for (Key each : directory) {
+                fileHash.writeInt(each.id);
+                fileHash.writeInt(each.pos);
+            }
         }
     }
 }

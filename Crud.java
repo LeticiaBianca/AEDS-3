@@ -56,7 +56,7 @@ public class Crud {
                 //BTREE
 
                 //HASHING
-                //iHash.insert(k);
+                iHash.insert(k);
                 //HASHING
 
                 pos += bytesdata.length;
@@ -75,6 +75,7 @@ public class Crud {
             }
         }
         iBtree.printFile();
+        iHash.printFile();
         filebytes.close();
     }
 

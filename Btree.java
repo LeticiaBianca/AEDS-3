@@ -38,12 +38,10 @@ public class Btree {
 
     public void insert(Key k){//insertion of an element in the root
         if(root.getNum() == 0){//verify if the root is empty
-            System.out.println("RAIZ VAZIA");
             root.setKey(k, 0);//insertion of the key in the position 0
             root.setNum(1);
         }else{
             if(root.getNum() == 7){
-                System.out.println("raiz cheia");
                 Node newRoot = new Node();
                 newRoot.setIsLeaf(false);
                 newRoot.setChildren(root, 0);
@@ -55,7 +53,6 @@ public class Btree {
                 newRoot.getChildren(i).insertNotFull(k);
                 root = newRoot;
             }else{                
-                System.out.println(root.getIsLeaf());
                 root.insertNotFull(k);
             }
             // Node r = root;
@@ -173,7 +170,6 @@ public class Btree {
         if(x.getIsLeaf() == false){
             return searchKey(k, x.getChildren(i));
         }else{
-            System.out.println("retornando null");
             return null;
         }
     }

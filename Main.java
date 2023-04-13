@@ -185,7 +185,7 @@ public class Main {
                 case "8":
                     if(isLoaded){
                         Airbnb theOne = new Airbnb();
-                        // Btree index = new Btree();
+                        Hashing index = new Hashing(1);
                         System.out.println("Type an id to be read: ");
                         int chooseId = scan.nextInt();
                         scan.nextLine();
