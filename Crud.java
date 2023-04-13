@@ -184,6 +184,7 @@ public class Crud {
 
         //HASHING
         iHash.insert(k);
+        iHash.printFile();
         //HASHING       
         
         filebytes.close();
@@ -234,6 +235,7 @@ public class Crud {
 
                         //HASHING
                         iHash.insert(k);
+                        iHash.printFile();
                         //HASHING       
                     }
                 }else{

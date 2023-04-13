@@ -185,17 +185,17 @@ public class Main {
                 case "8":
                     if(isLoaded){
                         Airbnb theOne = new Airbnb();
-                        Hashing index = new Hashing(1);
                         System.out.println("Type an id to be read: ");
                         int chooseId = scan.nextInt();
                         scan.nextLine();
-                        // Key res = index.searchKey(chooseId);
-                        // if(res != null){
-                        //     theOne =  crud.getByPos(res.getPos());
-                        //     theOne.print();  
-                        // }else{
-                        //     System.out.println("id not found");
-                        // }
+                        Hashing index = new Hashing("Hash.bin");
+                        Key res = index.search(chooseId);
+                        if(res != null){
+                            theOne =  crud.getByPos(res.getPos());
+                            theOne.print();  
+                        }else{
+                            System.out.println("id not found");
+                        }
                        
                     }else {
                         System.out.println();

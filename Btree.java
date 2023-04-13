@@ -129,28 +129,33 @@ public class Btree {
     }
 
     public void printFile() throws IOException {
+        int position = 4;
         fileBtree.seek(0);
-        fileBtree.writeInt(4);
-        printFile(root);
-
+        fileBtree.writeInt(position);
+        printFile(root, position);
     }
 
-    private void printFile(Node x) throws IOException{
+    private void printFile(Node x, int position) throws IOException{
         fileBtree.writeInt(x.getNum());
-        fileBtree.writeInt(-1);
+        fileBtree.writeInt(position += 92);
         for (int i = 0; i < 7; i++) {
-            if(i < x. getNum()){
+            if(i < x.getNum()){
                 fileBtree.writeInt(x.getKey(i).getId());
                 fileBtree.writeInt(x.getKey(i).getPos());
+                if(x.getIsLeaf() == false){
+                    fileBtree.writeInt(position+=92);
+                }else{
+                    fileBtree.writeInt(-1);
+                }
             }else{
                 fileBtree.writeInt(0);
                 fileBtree.writeInt(0);
+                fileBtree.writeInt(-1);
             }
-            fileBtree.writeInt(-1);
         }
         if(x.getIsLeaf() == false){
             for (int i = 0; i <= x.getNum(); i++) {    
-               printFile(x.getChildren(i));
+               printFile(x.getChildren(i), position);
             }
         }
     }
