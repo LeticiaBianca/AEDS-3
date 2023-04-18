@@ -27,6 +27,7 @@ public class Main {
             System.out.println("6 - Sorting algorithms");
             System.out.println("7 - Read with Btree");
             System.out.println("8 - Read with Hashing");
+            System.out.println("9 - Read with Inverted Index");
             System.out.println("0 - Exit the programm");
             System.out.println();
             System.out.print("Choose an operation: ");
@@ -197,6 +198,92 @@ public class Main {
                             System.out.println("id not found");
                         }
                        
+                    }else {
+                        System.out.println();
+                        System.out.println("File not loaded!");
+                        System.out.println();
+                    }   
+                    break;
+                case "9":
+                    if(isLoaded){                        
+                        System.out.println();
+                        System.out.println("0 - Back to menu");
+                        System.out.println("1 - Read by type");
+                        System.out.println("2 - Read by cancelation restriction");
+                        System.out.println("3 - Read by both");
+                        System.out.println();
+                        System.out.print("Choose an operation: ");
+                        String choose = scan.nextLine();
+                        switch(choose){
+                            case "0":
+                                break;
+                            case "1":
+                                System.out.println("Type the type of property: ");
+                                String nameT = scan.nextLine();
+                                InvertedIndex invertedT = new InvertedIndex();
+                                invertedT.getTypeFromFile();
+                                ArrayList<Integer> type = invertedT.searchType(nameT);
+                                if (type != null) {
+                                    for (Integer pos : type) {
+                                        if(pos != 0){
+                                            Airbnb theOne = new Airbnb();
+                                            theOne = crud.getByPos(pos);
+                                            theOne.print();
+                                        }
+                                    }
+                                }else{
+                                    System.out.println();
+                                    System.out.println("id not found");
+                                    System.out.println();
+                                }
+                                break;
+                            case "2":
+                                System.out.println("Type the cancelation restriction: ");
+                                String nameC = scan.nextLine();
+                                InvertedIndex invertedC = new InvertedIndex();
+                                invertedC.getCFromFile();
+                                ArrayList<Integer> cancel = invertedC.searchCancel(nameC);
+                                if(cancel != null){
+                                    for (Integer pos : cancel) {
+                                        if(pos != 0){
+                                            Airbnb theOne = new Airbnb();
+                                            theOne = crud.getByPos(pos);
+                                            theOne.print();
+                                        }
+                                    }
+                                }else{
+                                    System.out.println();
+                                    System.out.println("id not found");
+                                    System.out.println();
+                                }
+                                break;
+                            case "3":
+                                System.out.println("Type the  type of property and cancelation restriction: ");
+                                String types = scan.nextLine();
+                                String cancels = scan.nextLine();
+                                InvertedIndex inverted = new InvertedIndex();
+                                inverted.getCFromFile();
+                                inverted.getTypeFromFile();
+                                ArrayList<Integer> List = inverted.search(types, cancels);
+                                if(List.size() > 0){
+                                    for (Integer pos : List) {
+                                        if(pos != 0){
+                                            Airbnb theOne = new Airbnb();
+                                            theOne = crud.getByPos(pos);
+                                            theOne.print();
+                                        }
+                                    }
+                                }else{
+                                    System.out.println();
+                                    System.out.println("id not found");
+                                    System.out.println();
+                                }
+                                break;
+                            default:
+                                System.out.println();
+                                System.out.println("Invalid operation");  
+                                System.out.println();
+                        }
                     }else {
                         System.out.println();
                         System.out.println("File not loaded!");

@@ -53,13 +53,13 @@ public class Crud {
                 pos += 4;
                 Key k = new Key(aux.id, pos);
                 
-                //BTREE
-                iBtree.insert(k);
-                //BTREE
+                // //BTREE
+                // iBtree.insert(k);
+                // //BTREE
 
-                //HASHING
-                iHash.insert(k);
-                //HASHING
+                // //HASHING
+                // iHash.insert(k);
+                // //HASHING
 
                 //INVERTED
                 invert.insertType(pos, aux);
@@ -81,8 +81,8 @@ public class Crud {
                 }
             }
         }
-        iBtree.printFile();
-        iHash.printFile();
+        // iBtree.printFile();
+        // iHash.printFile();
         invert.print();
         filebytes.close();
     }
