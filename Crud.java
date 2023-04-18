@@ -14,6 +14,7 @@ public class Crud {
     public String filename;
     public Btree iBtree;
     public Hashing iHash;
+    public InvertedIndex invert;
 
     //empty contructor
     public Crud() throws FileNotFoundException {
@@ -21,6 +22,7 @@ public class Crud {
         this.filename = "out.bin";
         this.iBtree = new Btree();
         this.iHash = new Hashing(1);
+        this.invert = new InvertedIndex();
     }
 
     // =================================== LOAD FILE IN BINARY METHOD ==================================
@@ -59,6 +61,11 @@ public class Crud {
                 iHash.insert(k);
                 //HASHING
 
+                //INVERTED
+                invert.insertType(pos, aux);
+                invert.insertCancel(pos, aux);
+                //INVERTED
+
                 pos += bytesdata.length;
 
             }
@@ -76,6 +83,7 @@ public class Crud {
         }
         iBtree.printFile();
         iHash.printFile();
+        invert.print();
         filebytes.close();
     }
 

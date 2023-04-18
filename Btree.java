@@ -7,18 +7,15 @@ import java.io.RandomAccessFile;
  */
 public class Btree {
 
-    int num;
     Node root;
     public String BtreeFile;
     RandomAccessFile fileBtree;
 
-    public Btree(Node root, int num) {
+    public Btree(Node root) {
         this.root = root;
-        this.num = num;
     }
     public Btree() throws FileNotFoundException{
         this.root = new Node();
-        this.num = 0;
         this.BtreeFile = "Btree.bin";
         
        this.fileBtree = new RandomAccessFile(BtreeFile, "rw");
@@ -29,12 +26,6 @@ public class Btree {
     public void setRoot(Node root) {
         this.root = root;
     }
-    public int getNum() {
-        return num;
-    }
-    public void setNum(int num) {
-        this.num = num;
-    }
 
     public void insert(Key k){//insertion of an element in the root
         if(root.getNum() == 0){//verify if the root is empty
@@ -42,6 +33,7 @@ public class Btree {
             root.setNum(1);
         }else{
             if(root.getNum() == 7){
+                System.out.println("Aqui");
                 Node newRoot = new Node();
                 newRoot.setIsLeaf(false);
                 newRoot.setChildren(root, 0);
@@ -52,22 +44,10 @@ public class Btree {
                 }
                 newRoot.getChildren(i).insertNotFull(k);
                 root = newRoot;
-            }else{                
+            }else{            
                 root.insertNotFull(k);
             }
-            // Node r = root;
-            // if(root.getNum() != 7){// verify if the root is full
-            //     insertNotFull(r, k);
-            // }else{
-            //     Node newNode = new Node();
-            //     newNode.setIsLeaf(false);
-            //     newNode.setChildren(r, 0);
-            //     splitNode(newNode, 0, r);
-            //     insertNotFull(newNode, k);
-            //     root = newNode;
-            // }
         }
-        num++;
     }
     
     private void splitNode(Node r, int i, Node newNode) {
