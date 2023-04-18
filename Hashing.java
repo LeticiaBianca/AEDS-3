@@ -93,6 +93,7 @@ public class Hashing {
 
     public void printFile() throws IOException {
         fileHash.writeInt(p);
+        fileHash.writeInt(bucketList.size());
         for (ArrayList<Key> directory : bucketList) {
             fileHash.writeInt(directory.size());
             for (Key each : directory) {
@@ -109,16 +110,15 @@ public class Hashing {
             bucketList.add(new ArrayList<Key>(bucketSize));
         }
 
-        int j = 0;
-        while(fileHash.getFilePointer() < fileHash.length()){
+        int size1 = fileHash.readInt();
+        for (int n = 0; n < size1; n++) {
             int size = fileHash.readInt();
             for(int i=0; i<size; i++){
                 int id = fileHash.readInt();
                 int pos = fileHash.readInt();
                 Key k = new Key(id, pos);
-                bucketList.get(j).add(k);
-            }
-            j++;
+                bucketList.get(n).add(k);
+            }  
         }
     }
     

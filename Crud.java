@@ -57,14 +57,14 @@ public class Crud {
                 // iBtree.insert(k);
                 // //BTREE
 
-                // //HASHING
-                // iHash.insert(k);
-                // //HASHING
+                //HASHING
+                iHash.insert(k);
+                //HASHING
 
-                //INVERTED
-                invert.insertType(pos, aux);
-                invert.insertCancel(pos, aux);
-                //INVERTED
+                // //INVERTED
+                // invert.insertType(pos, aux);
+                // invert.insertCancel(pos, aux);
+                // //INVERTED
 
                 pos += bytesdata.length;
 
@@ -82,8 +82,8 @@ public class Crud {
             }
         }
         // iBtree.printFile();
-        // iHash.printFile();
-        invert.print();
+        iHash.printFile();
+        // invert.print();
         filebytes.close();
     }
 
