@@ -15,6 +15,7 @@ public class Main {
     public static void main(String[] args) throws Exception{
         String answer;
         Crud crud = new Crud();
+        Btree index = new Btree();
        
         boolean isLoaded = false;
 
@@ -39,7 +40,7 @@ public class Main {
                     break;
                 
                 case "1":
-                    crud.loadFile();
+                    crud.loadFile(index);
                     isLoaded = true;
                     System.out.println();
                     System.out.println("Successfully loaded!");
@@ -48,7 +49,7 @@ public class Main {
 
                 case "2":
                     if(isLoaded == true){
-                        crud.create();
+                        crud.create(index);
                         System.out.println();
                         System.out.println("Record successfully created!");
                         System.out.println();
@@ -83,7 +84,7 @@ public class Main {
                         System.out.println("Type an id to be updated: ");
                         chooseId = scan.nextInt();
                         scan.nextLine();
-                        crud.update(chooseId);
+                        crud.update(chooseId, index);
                         System.out.println();
                         System.out.println("Record successfully updated!");
                         System.out.println();
@@ -165,7 +166,6 @@ public class Main {
                 case "7":
                     if(isLoaded){
                         Airbnb theOne = new Airbnb();
-                        Btree index = new Btree();
                         System.out.println("Type an id to be read: ");
                         int chooseId = scan.nextInt();
                         scan.nextLine();
@@ -189,8 +189,8 @@ public class Main {
                         System.out.println("Type an id to be read: ");
                         int chooseId = scan.nextInt();
                         scan.nextLine();
-                        Hashing index = new Hashing("Hash.bin");
-                        Key res = index.search(chooseId);
+                        Hashing indexH = new Hashing("Hash.bin");
+                        Key res = indexH.search(chooseId);
                         if(res != null){
                             theOne =  crud.getByPos(res.getPos());
                             theOne.print();  

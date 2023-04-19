@@ -248,23 +248,23 @@ public class Airbnb {
 
     public void print(){
         System.out.println();
-        System.out.print(id + " ");
-        System.out.print(type + " ");
-        System.out.print(amenities + " ");
-        System.out.print(accommodates + " ");
-        System.out.print(cancelation + " ");
-        System.out.print(cleaning + " ");
-        System.out.print(city + " ");
+        System.out.println("Id: " + id);
+        System.out.println("Type: " + type);
+        System.out.println("Amenities: " + amenities);
+        System.out.println("Accomodates: " + accommodates);
+        System.out.println("Cancelatioin: " + cancelation);
+        System.out.println("Cleaning" + cleaning);
+        System.out.println("City: " + city);
 
         //adjusting the date format
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);	
         Calendar reviewcal = Calendar.getInstance();
         reviewcal.setTime(review);
-        System.out.print(sdf.format(reviewcal.getTime()) + " ");
+        System.out.print("Date: " +sdf.format(reviewcal.getTime()));
 
-        System.out.print(name + " ");
-        System.out.print(neighbourhood + " ");
-        System.out.print(rating + " ");
+        System.out.print("Name: " + name);
+        System.out.print("Neighbourhood: " + neighbourhood);
+        System.out.print("Rating: " + rating);
         System.out.println();
         System.out.println();
     }

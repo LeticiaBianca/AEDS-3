@@ -3,26 +3,22 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 /**
- * ArvoreB
+ * Btree
  */
 public class Btree {
 
     Node root;
-    public String BtreeFile;
     RandomAccessFile fileBtree;
 
-    public Btree(Node root) {
-        this.root = root;
-    }
     public Btree() throws FileNotFoundException{
         this.root = new Node();
-        this.BtreeFile = "Btree.bin";
-        
-       this.fileBtree = new RandomAccessFile(BtreeFile, "rw");
+       this.fileBtree = new RandomAccessFile("Btree.bin", "rw");
     }
+
     public Node getRoot() {
         return root;
     }
+
     public void setRoot(Node root) {
         this.root = root;
     }
@@ -30,56 +26,56 @@ public class Btree {
     public void insert(Key k){//insertion of an element in the root
         if(root.getNum() == 0){//verify if the root is empty
             root.setKey(k, 0);//insertion of the key in the position 0
-            root.setNum(1);
+            root.setNum(root.getNum()+1);
         }else{
-            if(root.getNum() == 7){
-                System.out.println("Aqui");
-                Node newRoot = new Node();
-                newRoot.setIsLeaf(false);
-                newRoot.setChildren(root, 0);
-                newRoot.splitChildren(root, 0);
-                int i = 0;
-                if(newRoot.getKey(0).id < k.id){
-                    i++;
-                }
-                newRoot.getChildren(i).insertNotFull(k);
-                root = newRoot;
-            }else{            
-                root.insertNotFull(k);
+            Node r = root;
+            if (r.getNum() == 7) {
+                Node s = new Node();
+                s.setIsLeaf(false);
+                s.setNum(0);
+                s.setChildren(r, 0);
+                splitNode(s, 0, r);
+                insertNotFull(s, k);
+                root = s;
+            }else{
+                insertNotFull(r, k);
             }
         }
     }
     
-    private void splitNode(Node r, int i, Node newNode) {
+    private void splitNode(Node x, int i, Node y) {
         int minimumsize = 3;
 
-        Node newNode2 = new Node();
-        newNode2.setIsLeaf(newNode.getIsLeaf());
+        Node z = new Node();
+        z.setIsLeaf(y.getIsLeaf());
+        z.setNum(minimumsize);
 
         for (int j = 0; j < minimumsize; j++) {
-            newNode2.setKey(newNode.getKey(j), j+minimumsize+1);
-            newNode.setNum(newNode.getNum()-1);
-            newNode2.setNum(newNode2.getNum()+1);
+
+            z.setKey(y.getKey(j+4), j);
+            y.setNum(y.getNum()-1);      
         }
 
-        if(newNode2.getIsLeaf() == false){
-            for (int j = 0; j < minimumsize; j++){
-                newNode2.setChildren(newNode.getChildren(j+minimumsize+1 ), j);
+        if (!y.getIsLeaf()) {
+            for (int j = 0; j < minimumsize + 1; j++) {
+                z.setChildren(y.getChildren(j+4), j);
             }
         }
-        for (int j = r.getNum(); j > i; j--) {
-            r.setChildren(r.getChildren(j), j+1);
+
+        y.setNum(minimumsize);
+
+        for (int j = x.getNum(); j > i; j--) { 
+            x.setChildren(x.getChildren(j), j+1);
         }
 
-        r.setChildren(newNode2, i+1);
+        x.setChildren(z, i+1);
 
-        for (int j = r.getNum(); j > i; j--) {
-            r.setKey(r.getKey(j-1), j+1);
+        for (int j = x.getNum(); j > i; j--) {
+            x.setKey(x.getKey(j-1), j);
         }
-
-        r.setKey(newNode.getKey(minimumsize-1), i);
-        newNode.setNum(newNode.getNum()-1);
-        r.setNum(r.getNum()+1);
+        
+        x.setKey(y.getKey(minimumsize), i);
+        x.setNum(x.getNum() + 1);
     }
 
     public void insertNotFull(Node node, Key k) {
@@ -145,17 +141,16 @@ public class Btree {
     }
 
     private Key searchKey(int k, Node x) {
-        int i = 0;
-        while (i < x.getNum()-1 && (k > x.getKey(i).getId())) { 
+        int i = 1;
+        while (i <= x.getNum() && (k > x.getKey(i-1).getId())) { 
             i++;
         }
-        if ((i < x.getNum()-1) && (k == x.getKey(i).getId())) {
+        if ((i <= x.getNum()) && (k == x.getKey(i-1).getId())) {
             return x.getKey(i);
-        }
-        if(x.getIsLeaf() == false){
-            return searchKey(k, x.getChildren(i));
-        }else{
+        }else if(x.getIsLeaf()){
             return null;
+        }else{
+            return searchKey(k, x.getChildren(i-1));
         }
     }
 

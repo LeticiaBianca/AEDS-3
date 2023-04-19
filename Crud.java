@@ -12,7 +12,6 @@ public class Crud {
     // declaration of variables
     public int lastId;
     public String filename;
-    public Btree iBtree;
     public Hashing iHash;
     public InvertedIndex invert;
 
@@ -20,14 +19,13 @@ public class Crud {
     public Crud() throws FileNotFoundException {
         this.lastId = 0;
         this.filename = "out.bin";
-        this.iBtree = new Btree();
         this.iHash = new Hashing(1);
         this.invert = new InvertedIndex();
     }
 
     // =================================== LOAD FILE IN BINARY METHOD ==================================
     // This method get all the data in csv convert to binary and write in the binary file
-    public void loadFile() throws ParseException, IOException{
+    public void loadFile(Btree iBtree) throws ParseException, IOException{
         
         BufferedReader reader = null;
         byte[] bytesdata;
@@ -53,18 +51,18 @@ public class Crud {
                 pos += 4;
                 Key k = new Key(aux.id, pos);
                 
-                // //BTREE
-                // iBtree.insert(k);
-                // //BTREE
+                //BTREE
+                iBtree.insert(k);
+                //BTREE
 
                 //HASHING
                 iHash.insert(k);
                 //HASHING
 
-                // //INVERTED
-                // invert.insertType(pos, aux);
-                // invert.insertCancel(pos, aux);
-                // //INVERTED
+                //INVERTED
+                invert.insertType(pos, aux);
+                invert.insertCancel(pos, aux);
+                //INVERTED
 
                 pos += bytesdata.length;
 
@@ -81,9 +79,9 @@ public class Crud {
                 }
             }
         }
-        // iBtree.printFile();
+        iBtree.printFile();
         iHash.printFile();
-        // invert.print();
+        invert.print();
         filebytes.close();
     }
 
@@ -160,7 +158,7 @@ public class Crud {
 
 
     //================================ CREATE A NEW AIRBNB ===========================
-    public Airbnb create() throws ParseException, IOException{
+    public Airbnb create(Btree iBtree) throws ParseException, IOException{
 
         byte[] bytesdata;
         RandomAccessFile filebytes = new RandomAccessFile(filename, "rw");
@@ -193,7 +191,14 @@ public class Crud {
         //HASHING
         iHash.insert(k);
         iHash.printFile();
-        //HASHING       
+        //HASHING   
+        
+        
+        //INVERTED
+        invert.insertType(len+4, newHostel);
+        invert.insertCancel(len+4, newHostel);
+        invert.print();
+        //INVERTED
         
         filebytes.close();
         
@@ -201,7 +206,7 @@ public class Crud {
     }
 
     //================================ UPDATE A AIRBNB ================================
-    public Airbnb update(int id) throws IOException, ParseException{
+    public Airbnb update(int id, Btree iBtree) throws IOException, ParseException{
 
         RandomAccessFile filebytes = new RandomAccessFile(filename, "rw");
         byte[] bytesdata;
@@ -244,7 +249,13 @@ public class Crud {
                         //HASHING
                         iHash.insert(k);
                         iHash.printFile();
-                        //HASHING       
+                        //HASHING  
+                        
+                        //INVERTED
+                        invert.insertType(len+4, newHostel);
+                        invert.insertCancel(len+4, newHostel);
+                        invert.print();
+                        //INVERTED
                     }
                 }else{
                     pos  = pos + size + 4;
