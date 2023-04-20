@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
-// following the intrction from the TP2 the size of the bucket is 293
+// Using 5% of file length as bucket size
 
 public class Hashing {
     private int p;
@@ -11,16 +11,20 @@ public class Hashing {
     private RandomAccessFile fileHash;
     private ArrayList<ArrayList<Key>> bucketList;
     
+    // Craetes a binary file 
     public Hashing(int p) throws FileNotFoundException {
         this.p = p;
         bucketSize = 293;
-        fileHash = new RandomAccessFile("Hash.bin", "rw");
+        fileHash = new RandomAccessFile("./BinFiles/Hash.bin", "rw");
 
+        //initialize the bucket with accurate size 
         bucketList = new ArrayList<ArrayList<Key>>((int)Math.pow(2, p));
         for (int i = 0; i < (int)Math.pow(2, p); i++) { 
             bucketList.add(new ArrayList<Key>(bucketSize));
         }
     }
+
+    //Read from binary hash file
     public Hashing(String name) throws IOException {
         bucketSize = 293;
         fileHash = new RandomAccessFile(name, "rw");
@@ -61,13 +65,16 @@ public class Hashing {
         this.bucketList = bucketList;
     }
 
+    //Hash method
     private int h(int id, int p){
         return id % ((int)Math.pow(2, p));
     }
 
+    //Insert method
     public void insert(Key k){
         int index = h(k.id, p);
 
+        //Verify if its full
         if(bucketList.get(index).size() >= bucketSize){
             int newp = p + 1;
             ArrayList<ArrayList<Key>> newbucketList = new ArrayList<ArrayList<Key>>((int)Math.pow(2, newp));
@@ -76,6 +83,7 @@ public class Hashing {
                 newbucketList.add(new ArrayList<Key>(bucketSize));
             }
             
+            //Rearrange all data
             for (ArrayList<Key> bucket : bucketList) {
                 for (Key each : bucket){
                     Key key = each;
@@ -86,11 +94,14 @@ public class Hashing {
             p = newp;
             bucketList = newbucketList;
 
+            //defi a new hash
             index = h(k.getId(), p);
         }
+        //Insert a new key
         bucketList.get(index).add(k);
     }
 
+    //Print method
     public void printFile() throws IOException {
         fileHash.writeInt(p);
         fileHash.writeInt(bucketList.size());
@@ -103,6 +114,7 @@ public class Hashing {
         }
     }
 
+    //get data from binary file
     public void getFromFile() throws IOException{
         p = fileHash.readInt();
         bucketList = new ArrayList<ArrayList<Key>>((int)Math.pow(2, p));
@@ -122,6 +134,7 @@ public class Hashing {
         }
     }
     
+    //Search method
     public Key search(int k) {
         int index = h(k, p);
         Key key = null;

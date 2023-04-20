@@ -18,7 +18,7 @@ public class Crud {
     //empty contructor
     public Crud() throws FileNotFoundException {
         this.lastId = 0;
-        this.filename = "out.bin";
+        this.filename = "./BinFiles/out.bin";
         this.iHash = new Hashing(1);
         this.invert = new InvertedIndex();
     }
@@ -79,9 +79,11 @@ public class Crud {
                 }
             }
         }
+        //Calling print funtions for index files
         iBtree.printFile();
         iHash.printFile();
         invert.print();
+        
         filebytes.close();
     }
 
@@ -105,7 +107,7 @@ public class Crud {
                 if(filebytes.readInt() == id){
                     filebytes.seek(pos);
                     aux = new Airbnb();
-                    aux.fromByteArray(pos-4, "out.bin");
+                    aux.fromByteArray(pos-4, filename);
                     break;
                 }else{
                     pos += size;
@@ -277,7 +279,7 @@ public class Crud {
             Airbnb aux = null;
             filebytes.seek(pos);
             aux = new Airbnb();
-            aux.fromByteArray(pos-4, "out.bin");
+            aux.fromByteArray(pos-4, filename);
             return aux;
         }
     }

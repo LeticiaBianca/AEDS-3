@@ -138,18 +138,18 @@ public class Main {
                                 System.out.println();
                                 break;
                             case 2:
-                                // VariableIntercalation sort2 = new VariableIntercalation();
-                                // sort2.sort();
-                                // System.out.println();
-                                // System.out.println("File sorted with success!");
-                                // System.out.println();
+                                VariableIntercalation sort2 = new VariableIntercalation();
+                                sort2.sort();
+                                System.out.println();
+                                System.out.println("File sorted with success!");
+                                System.out.println();
                                 break;
                             case 3:
-                                // HeapSort sort3 = new HeapSort();
-                                // sort3.sort();
-                                // System.out.println();
-                                // System.out.println("File sorted with success!");
-                                // System.out.println();
+                                HeapSort sort3 = new HeapSort();
+                                sort3.sort();
+                                System.out.println();
+                                System.out.println("File sorted with success!");
+                                System.out.println();
                             break;
                             
                             default:
@@ -189,7 +189,7 @@ public class Main {
                         System.out.println("Type an id to be read: ");
                         int chooseId = scan.nextInt();
                         scan.nextLine();
-                        Hashing indexH = new Hashing("Hash.bin");
+                        Hashing indexH = new Hashing("./BinFiles/Hash.bin");
                         Key res = indexH.search(chooseId);
                         if(res != null){
                             theOne =  crud.getByPos(res.getPos());

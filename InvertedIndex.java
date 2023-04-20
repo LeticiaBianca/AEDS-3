@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
+// Class with all positions of determinated type
 class Field{
     String name;
     int num;
@@ -49,8 +50,9 @@ class InvertedIndex {
     int sizeC;
 
     public InvertedIndex() throws FileNotFoundException {
-        typeIndex = new RandomAccessFile("typeIndex.bin", "rw");
-        cancelIndex = new RandomAccessFile("cancelIndex.bin", "rw");
+        //Creates two binary file and inicilizate de variables
+        typeIndex = new RandomAccessFile("./BinFiles/typeIndex.bin", "rw");
+        cancelIndex = new RandomAccessFile("./BinFiles/cancelIndex.bin", "rw");
         type = new ArrayList<Field>();
         cancel = new ArrayList<Field>();
         sizeT = 0;
@@ -58,7 +60,7 @@ class InvertedIndex {
     }
 
     public void insertType(int pos, Airbnb aux) {
-        boolean ok = false;
+        boolean ok = false; //Verify if already exists an type
         for (Field field : type) {
             if(field.name.compareTo(aux.type) == 0){
                 field.setPositions(pos);
@@ -67,7 +69,7 @@ class InvertedIndex {
                 break;
             }
         }
-
+         
         if(!ok){
             Field newfield = new Field(aux.type, pos);
             type.add(newfield);
@@ -76,7 +78,7 @@ class InvertedIndex {
     }
 
     public void insertCancel(int pos, Airbnb aux) {
-        boolean ok = false;
+        boolean ok = false; //Verify if already exists an cancelation
         for (Field field : cancel) {
             if(field.name.compareTo(aux.cancelation) == 0){
                 field.setPositions(pos);
@@ -93,6 +95,7 @@ class InvertedIndex {
         }
     }
 
+    //Print method on binary file
     public void print() throws IOException {
         typeIndex.writeInt(sizeT);
         for (Field field : type){
@@ -119,6 +122,7 @@ class InvertedIndex {
         cancelIndex.close();
     }
 
+    //Search method from type
     public ArrayList<Integer> searchType(String name) throws IOException {
         ArrayList<Integer> positions = null;
         for (Field field : type) {
@@ -130,6 +134,7 @@ class InvertedIndex {
         return positions;
     }
 
+    //Search method from cancelation
     public ArrayList<Integer> searchCancel(String name) throws IOException {
         ArrayList<Integer> positions = null;
         for (Field field : cancel) {
@@ -141,20 +146,27 @@ class InvertedIndex {
         return positions;
     }
 
-    
+    //Search method from both fields
     public ArrayList<Integer> search(String ntype, String ncancel) throws IOException {
         ArrayList<Integer> positions = new ArrayList<Integer>();
         ArrayList<Integer> typeList = searchType(ntype);
         ArrayList<Integer> cancelList = searchCancel(ncancel);
 
-        for (Integer pos : typeList) {
-            if(cancelList.contains(pos)){
-                positions.add(pos);
+    
+        if(typeIndex != null && cancelList != null){
+            for (Integer pos : typeList) {
+                if(cancelList.contains(pos)){
+                    positions.add(pos);
+                }
             }
+        }else{
+            positions = null;
         }
+        
         return positions;
     }
 
+    //Creates an Inverted index from the binary file
     public void getTypeFromFile() throws IOException {
         int sizeTy = typeIndex.readInt();
         for (int i = 0; i < sizeTy; i++) {
@@ -170,6 +182,7 @@ class InvertedIndex {
         }
     }
 
+    //Creates an Inverted index from the binary file
     public void getCFromFile() throws IOException {
         int sizeCa = cancelIndex.readInt();
         for (int i = 0; i < sizeCa; i++) {

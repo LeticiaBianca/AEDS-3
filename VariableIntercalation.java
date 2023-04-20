@@ -18,11 +18,11 @@ public class VariableIntercalation {
     //empty contructor
     public VariableIntercalation() throws FileNotFoundException {
         this.blocksize = 5000;
-        this.filename = "out.bin";
-        this.temp1 = new RandomAccessFile("TempFile1.bin", "rw");
-        this.temp2 = new RandomAccessFile("TempFile2.bin", "rw");
-        this.temp3 = new RandomAccessFile("TempFile3.bin", "rw");
-        this.temp4 = new RandomAccessFile("TempFile4.bin", "rw");
+        this.filename = "./BinFiles/out.bin";
+        this.temp1 = new RandomAccessFile("./BinFiles/TempFile1.bin", "rw");
+        this.temp2 = new RandomAccessFile("./BinFiles/TempFile2.bin", "rw");
+        this.temp3 = new RandomAccessFile("./BinFiles/TempFile3.bin", "rw");
+        this.temp4 = new RandomAccessFile("./BinFiles/TempFile4.bin", "rw");
     }
     
      //This method sort the out.bin file and create a new file
@@ -65,16 +65,16 @@ public class VariableIntercalation {
             records.clear();
         }
         //intercalate the blocks until has one left
-        intercalate(temp1, temp2, "TempFile1.bin", "TempFile2.bin", temp3, temp4);
+        intercalate(temp1, temp2, "./BinFiles/TempFile1.bin", "./BinFiles/TempFile2.bin", temp3, temp4);
 
         //delete the files
-        File f2 = new File("TempFile2.bin");
+        File f2 = new File("./BinFiles/TempFile2.bin");
         f2.delete();
 
-        File f3 = new File("TempFile3.bin");
+        File f3 = new File("./BinFiles/TempFile3.bin");
         f3.delete();
 
-        File f4 = new File("TempFile4.bin");
+        File f4 = new File("./BinFiles/sTempFile4.bin");
         f4.delete();
         
         filebytes.close();    
@@ -255,11 +255,11 @@ public class VariableIntercalation {
 
              //see if the intercalation is done
             if(temp04.length() > 0){
-                if(name1.compareTo("TempFile1.bin") == 0){
-                    intercalate(temp3, temp4, "TempFile3.bin", "TempFile4.bin", temp1, temp2);
+                if(name1.compareTo("./BinFiles/TempFile1.bin") == 0){
+                    intercalate(temp3, temp4, "./BinFiles/TempFile3.bin", "./BinFiles/TempFile4.bin", temp1, temp2);
                 }
                 else{
-                    intercalate(temp1, temp2, "TempFile1.bin", "TempFile2.bin", temp3, temp4);
+                    intercalate(temp1, temp2, "./BinFiles/TempFile1.bin", "./BinFiles/TempFile2.bin", temp3, temp4);
                 }
             }
         } catch (IOException e) {
