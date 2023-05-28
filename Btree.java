@@ -12,7 +12,7 @@ public class Btree {
 
     public Btree() throws FileNotFoundException{
         this.root = new Node();
-       this.fileBtree = new RandomAccessFile("./BinFiles/Btree.bin", "rw");
+       this.fileBtree = new RandomAccessFile("Btree.bin", "rw");
     }
 
     public Node getRoot() {
@@ -23,11 +23,9 @@ public class Btree {
         this.root = root;
     }
 
-    //insert an element
-    //split the root if it's full then call the insetionNotFull
-    public void insert(Key k){
-        if(root.getNum() == 0){
-            root.setKey(k, 0);
+    public void insert(Key k){//insertion of an element in the root
+        if(root.getNum() == 0){//verify if the root is empty
+            root.setKey(k, 0);//insertion of the key in the position 0
             root.setNum(root.getNum()+1);
         }else{
             Node r = root;
@@ -45,8 +43,6 @@ public class Btree {
         }
     }
     
-    //Split node method
-    //split node in two with the minimum size
     private void splitNode(Node x, int i, Node y) {
         int minimumsize = 3;
 
@@ -55,7 +51,6 @@ public class Btree {
         z.setNum(minimumsize);
 
         for (int j = 0; j < minimumsize; j++) {
-
             z.setKey(y.getKey(j+4), j);
             y.setNum(y.getNum()-1);      
         }
@@ -82,7 +77,6 @@ public class Btree {
         x.setNum(x.getNum() + 1);
     }
 
-    //find correct leave to insert the key
     public void insertNotFull(Node node, Key k) {
         int i = node.getNum() - 1;
 
@@ -109,7 +103,6 @@ public class Btree {
         }
     }
 
-    //recursive method to print data on binary file
     public void printFile() throws IOException {
         int position = 4;
         fileBtree.seek(0);
@@ -142,7 +135,6 @@ public class Btree {
         }
     }
 
-    //recursive method to serch key
     public Key searchKey(int k){
         return searchKey(k, root);
     }

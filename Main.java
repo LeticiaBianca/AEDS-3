@@ -29,6 +29,7 @@ public class Main {
             System.out.println("7 - Read with Btree");
             System.out.println("8 - Read with Hashing");
             System.out.println("9 - Read with Inverted Index");
+            System.out.println("10 - Compress");
             System.out.println("0 - Exit the programm");
             System.out.println();
             System.out.print("Choose an operation: ");
@@ -138,18 +139,18 @@ public class Main {
                                 System.out.println();
                                 break;
                             case 2:
-                                VariableIntercalation sort2 = new VariableIntercalation();
-                                sort2.sort();
-                                System.out.println();
-                                System.out.println("File sorted with success!");
-                                System.out.println();
+                                // VariableIntercalation sort2 = new VariableIntercalation();
+                                // sort2.sort();
+                                // System.out.println();
+                                // System.out.println("File sorted with success!");
+                                // System.out.println();
                                 break;
                             case 3:
-                                HeapSort sort3 = new HeapSort();
-                                sort3.sort();
-                                System.out.println();
-                                System.out.println("File sorted with success!");
-                                System.out.println();
+                                // HeapSort sort3 = new HeapSort();
+                                // sort3.sort();
+                                // System.out.println();
+                                // System.out.println("File sorted with success!");
+                                // System.out.println();
                             break;
                             
                             default:
@@ -189,7 +190,7 @@ public class Main {
                         System.out.println("Type an id to be read: ");
                         int chooseId = scan.nextInt();
                         scan.nextLine();
-                        Hashing indexH = new Hashing("./BinFiles/Hash.bin");
+                        Hashing indexH = new Hashing("Hash.bin");
                         Key res = indexH.search(chooseId);
                         if(res != null){
                             theOne =  crud.getByPos(res.getPos());
@@ -289,6 +290,18 @@ public class Main {
                         System.out.println("File not loaded!");
                         System.out.println();
                     }   
+                    break;
+                case "10":
+                    if(isLoaded){
+                        Lzw compress = new Lzw();
+                        compress.toString();
+                        String out = compress.lzw_compress();
+                        System.out.println(out);
+                    }else {
+                        System.out.println();
+                        System.out.println("File not loaded!");
+                        System.out.println();
+                    }
                     break;
                 default:
                     System.out.println();
