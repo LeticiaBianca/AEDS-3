@@ -30,6 +30,7 @@ public class Main {
             System.out.println("8 - Read with Hashing");
             System.out.println("9 - Read with Inverted Index");
             System.out.println("10 - Compress");
+            System.out.println("11 - Decompress");
             System.out.println("0 - Exit the programm");
             System.out.println();
             System.out.print("Choose an operation: ");
@@ -293,10 +294,26 @@ public class Main {
                     break;
                 case "10":
                     if(isLoaded){
+                        System.out.println("Type the name of the file to compress: ");
+                        String file = scan.nextLine();
                         Lzw compress = new Lzw();
-                        compress.toString();
-                        String out = compress.lzw_compress();
-                        System.out.println(out);
+                        compress.toString(file);
+                        compress.lzw_compress();
+                    }else {
+                        System.out.println();
+                        System.out.println("File not loaded!");
+                        System.out.println();
+                    }
+                    break;
+                case "11":
+                    if(isLoaded){
+                        System.out.println("Type the name of the file to decompress: ");
+                        String file = scan.nextLine();
+                        System.out.println("type the version of the file: ");
+                        int version = scan.nextInt();
+                        Lzw decompress = new Lzw();
+                        decompress.toString(file);
+                        decompress.lzw_extract(version);
                     }else {
                         System.out.println();
                         System.out.println("File not loaded!");
