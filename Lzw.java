@@ -23,7 +23,7 @@ public class Lzw {
     public String toString(String file) throws IOException{
         i++; 
         int pos = file.indexOf('.');
-        newfile = file.substring(0, pos) + "LZW" + "Compressao" + i + ".bin";
+        newfile = "./BinFiles/"+file.substring(0, pos) + "LZW" + "Compressao" + i + ".bin";
         RandomAccessFile filebytes = new RandomAccessFile(file, "rw");
         percent = filebytes.length();
         filebytes.close();
@@ -132,7 +132,7 @@ public class Lzw {
             input = out;
               
         }
-        RandomAccessFile filebytes = new RandomAccessFile("decompressLZW.bin", "rw");
+        RandomAccessFile filebytes = new RandomAccessFile("./BinFiles/decompressLZW.bin", "rw");
         filebytes.writeBytes(input);
         return input;
     }

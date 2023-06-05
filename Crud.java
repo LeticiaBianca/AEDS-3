@@ -281,5 +281,30 @@ public class Crud {
             return aux;
         }
     }
+
+    public String primaryMemory() {
+        BufferedReader reader = null;
+        String data = "";
+        String file = "Airbnb.csv";
+        try{
+            reader = new BufferedReader(new FileReader(file));
+            String readline;
+            while((readline = reader.readLine()) != null) {
+                data += readline;
+            }
+
+        }catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally{
+            if (reader != null){
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return data;
+    }
 }
 

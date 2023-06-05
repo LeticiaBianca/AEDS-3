@@ -31,6 +31,7 @@ public class Main {
             System.out.println("9 - Read with Inverted Index");
             System.out.println("10 - Compress");
             System.out.println("11 - Decompress");
+            System.out.println("12 - Pattern Matching");
             System.out.println("0 - Exit the programm");
             System.out.println();
             System.out.print("Choose an operation: ");
@@ -324,6 +325,14 @@ public class Main {
                     System.out.println();
                     System.out.println("Invalid operation");  
                     System.out.println();  
+                case "12":
+                        Crud getFile = new Crud();
+                        String data = getFile.primaryMemory();
+                        System.out.println("Type a pattern to be matched: ");
+                        String pattern = scan.nextLine();
+                        BruteForce bt = new BruteForce();
+                        bt.match(data, pattern);
+                    break;
             }
             
         }
