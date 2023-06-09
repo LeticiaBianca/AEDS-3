@@ -332,6 +332,8 @@ public class Main {
                         String pattern = scan.nextLine();
                         BruteForce bt = new BruteForce();
                         bt.match(data, pattern);
+                        KMP kmp = new KMP();
+                        kmp.match(data, pattern);
                     break;
             }
             
