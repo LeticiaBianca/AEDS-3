@@ -93,9 +93,10 @@ public class Lzw {
         return out;
     }
     public void toFile(String out) throws IOException {
-        RandomAccessFile filebytes = new RandomAccessFile(newfile, "rw");
-        filebytes.writeBytes(out);
-        percent = filebytes.length()/percent;
+        try (RandomAccessFile filebytes = new RandomAccessFile(newfile, "rw")) {
+            filebytes.writeBytes(out);
+            percent = filebytes.length()/percent;
+        }
         percent = 100 * (1 - percent);
         System.out.println("O percentual de redução foi de "+percent+"%");
         System.out.println();
@@ -132,8 +133,9 @@ public class Lzw {
             input = out;
               
         }
-        RandomAccessFile filebytes = new RandomAccessFile("./BinFiles/decompressLZW.bin", "rw");
-        filebytes.writeBytes(input);
+        try (RandomAccessFile filebytes = new RandomAccessFile("./BinFiles/decompressLZW.bin", "rw")) {
+            filebytes.writeBytes(input);
+        }
         return input;
     }
 }

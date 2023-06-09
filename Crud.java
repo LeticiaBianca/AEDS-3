@@ -282,6 +282,7 @@ public class Crud {
         }
     }
 
+    //get the file and save it on a string
     public String primaryMemory() {
         BufferedReader reader = null;
         String data = "";
