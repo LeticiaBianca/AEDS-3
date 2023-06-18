@@ -32,6 +32,8 @@ public class Main {
             System.out.println("10 - Compress");
             System.out.println("11 - Decompress");
             System.out.println("12 - Pattern Matching");
+            System.out.println("13 - Caesar Cryptography");
+            System.out.println("14 - OTP Cryptography");
             System.out.println("0 - Exit the programm");
             System.out.println();
             System.out.print("Choose an operation: ");
@@ -321,10 +323,7 @@ public class Main {
                         System.out.println();
                     }
                     break;
-                default:
-                    System.out.println();
-                    System.out.println("Invalid operation");  
-                    System.out.println();  
+                  
                 case "12":
                         Crud getFile = new Crud();
                         String data = getFile.primaryMemory();
@@ -335,6 +334,32 @@ public class Main {
                         KMP kmp = new KMP();
                         kmp.match(data, pattern);
                     break;
+
+                case "13": 
+                        Crud getstring = new Crud();
+                        String text = getstring.primaryMemory();
+                        System.out.println("Choose a number to be the key:");                   
+                        int key = scan.nextInt();
+                        scan.nextLine();
+                        Caesar caeser = new Caesar();                                
+                        caeser.crypto(text, key);
+                        
+                    break;
+
+                case "14":
+                        Crud string = new Crud();
+                        String x = string.primaryMemory();
+                        OTP otp = new OTP(x);
+                        otp.randomKey(x);
+                        
+                        
+
+
+
+                default:
+                    System.out.println();
+                    System.out.println("Invalid operation");  
+                    System.out.println();
             }
             
         }
